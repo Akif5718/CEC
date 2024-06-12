@@ -27,6 +27,7 @@ StoredProcedures/IsUniqueUser.sql
 StoredProcedures/SelectUserByEmail.sql
 StoredProcedures/IsValidUser.sql
 StoredProcedures/SelectRoleByUserId.sql
+StoredProcedures/SearchMapData.sql
 
 # Migration
 
