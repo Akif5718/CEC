@@ -1,0 +1,35 @@
+
+# Tables
+
+## ASPNetTables
+Tables/AspNetTables/AspNetUsers.sql
+Tables/AspNetTables/AspNetRoles.sql
+Tables/AspNetTables/AspNetUserLogins.sql
+Tables/AspNetTables/AspNetUserTokens.sql
+Tables/AspNetTables/AspNetUserRoles.sql
+Tables/AspNetTables/AspNetRoleClaims.sql
+Tables/AspNetTables/AspNetUserClaims.sql
+
+## CECTables
+Tables/CEC/Setting.sql
+Tables/CEC/User.sql
+
+# Alter
+
+# Seed scripts
+SeedData/Setting.sql
+
+# StoredProcedures
+StoredProcedures/SaveUser.sql
+StoredProcedures/SelectUser.sql
+StoredProcedures/SelectUserById.sql
+StoredProcedures/IsUniqueUser.sql
+StoredProcedures/SelectUserByEmail.sql
+StoredProcedures/IsValidUser.sql
+StoredProcedures/SelectRoleByUserId.sql
+
+# Migration
+
+# Update statistics
+
+# Scheduler Job
