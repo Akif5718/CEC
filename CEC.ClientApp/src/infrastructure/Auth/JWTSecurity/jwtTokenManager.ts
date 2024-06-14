@@ -41,7 +41,7 @@ export const getToken = async (): Promise<string | null> => {
   if (jsonUserInfo) {
     userInfo = JSON.parse(jsonUserInfo);
   }
-  const token = userInfo?.userToken || '';
+  const token = userInfo?.token || '';
 
   if (token && isTokenExpired(token)) {
     toast.error('Token expired');

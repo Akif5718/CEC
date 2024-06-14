@@ -7,7 +7,7 @@ const PrivateRoute: React.FC<{
   element: React.ReactNode;
 }> = ({ element }) => {
   const tempVar = localStorage.getItem('userInfo') || 'false';
-  const isAuthenticated = JSON.parse(tempVar);
+  const isAuthenticated = JSON.parse(tempVar)?.id || false;
   const dispatch = useAppDispatch();
   const location = useLocation();
 
@@ -19,11 +19,7 @@ const PrivateRoute: React.FC<{
     dispatch(saveLastRoute({ from: location }));
   }
 
-  return isAuthenticated ? (
-    <>{element}</>
-  ) : (
-    <Navigate to="/loginUsername" replace />
-  );
+  return isAuthenticated ? <>{element}</> : <Navigate to="/signIn" replace />;
 };
 
 export default PrivateRoute;

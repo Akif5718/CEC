@@ -1,10 +1,7 @@
 export interface ILoginResponse{
     userId: number,
     userName: string,
-    token:  string,
-    isSuccess: boolean,
-    message: string,
-    errorMessages: string
+    token:  string
 }
 
 export interface ILoginRequest{

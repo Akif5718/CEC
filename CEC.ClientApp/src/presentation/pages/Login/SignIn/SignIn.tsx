@@ -43,7 +43,7 @@ type Props = {};
 
 const SignIn = (props: Props) => {
   const { register, getValues, reset, control, setValue } = useForm();
-
+  const navigate = useNavigate();
   const [
     logIn,
     {
@@ -59,12 +59,19 @@ const SignIn = (props: Props) => {
     if (isLoginSuccess) {
       // setLoaderSpinnerForThisPage(false);
       toast.success("Logged In Successfully")
+      navigate(`/`)
     } else if (isLoginError) {
       // setLoaderSpinnerForThisPage(false);
-      toast.error(
-        'Something went wrong'
-      );
-      console.log(errorMessage);
+      const loginError = localStorage.getItem('loginError');
+      if(loginError){
+        const errorData = JSON.parse(loginError);
+        if (errorData.data.message) {
+          toast.error(`Status: ${errorData.status} - ${errorData.data.message}`);
+        } else {
+          toast.error("Something went wrong");
+        }
+        localStorage.removeItem('loginError');
+      }
     }
   }, [
     isLoginLoading,
@@ -75,8 +82,6 @@ const SignIn = (props: Props) => {
   ]);
 
   // const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   dispatch(setNavbarShow(true));
@@ -96,7 +101,7 @@ const SignIn = (props: Props) => {
   }, []);
 
   const particlesLoaded = async (container?: Container): Promise<void> => {
-    console.log(container);
+    // console.log(container);
   };
 
   const options: ISourceOptions = useMemo(

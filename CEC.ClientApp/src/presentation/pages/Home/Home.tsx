@@ -39,7 +39,7 @@ const Home = (props: Props) => {
   const navigate = useNavigate();
 
   const handleCardClick = (filterKeyword: string) => {
-    navigate(`/searchPage/${filterKeyword}`);
+    navigate(`/searchPage`);
   };
 
   const onSubmit = (data: any) => {

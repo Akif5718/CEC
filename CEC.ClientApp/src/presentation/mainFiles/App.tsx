@@ -193,7 +193,7 @@ const App = () => {
                         path="searchPage/:id"
                         element={<PrivateRoute element={<SearchPage />} />}
                       /> */}
-                      <Route path="searchPage/:id" element={<SearchPage />} />
+                      <Route path="searchPage" element={<SearchPage />} />
                     </Routes>
                   </Suspense>
                 </div>
