@@ -47,6 +47,8 @@ import ChequeBookRegistration from '../pages/ChequeBookRegistration/ChequeBookRe
 import SearchPage from '../pages/SearchPage/SearchPage';
 import SignUp from '../pages/Login/SignUp/SignUp';
 import SignIn from '../pages/Login/SignIn/SignIn';
+import Footer from '../components/Footer';
+import UserProfile from '../pages/UserProfile/UserProfile';
 // import SignIn from '../pages/Login/SignIn';
 // const Navbar = lazy(() => import('../components/Navbar'));
 // const ThemeSettings = lazy(() => import('../components/ThemeSettings'));
@@ -194,6 +196,7 @@ const App = () => {
                         element={<PrivateRoute element={<SearchPage />} />}
                       /> */}
                       <Route path="searchPage" element={<SearchPage />} />
+                      <Route path="userProfile" element={<UserProfile />} />
                     </Routes>
                   </Suspense>
                 </div>
@@ -217,6 +220,9 @@ const App = () => {
           style={{ zIndex: 999999999999 }}
         />
       </ThemeProvider>
+      <div>
+        <Footer></Footer>
+      </div>
     </div>
   );
 };

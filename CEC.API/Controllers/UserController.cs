@@ -1,5 +1,6 @@
 using CEC.API.ActionFilters;
 using CEC.Models;
+using CEC.Models.ResponseModels;
 using CEC.Models.ViewModels;
 using CEC.Services.Interface;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ public class UserController : Controller
     public async Task<IActionResult> GetUserById([FromBody] int id)
     {
         _logger.LogInformation("GetUserById starts");
-        ResultModel<UserModel> response = new ResultModel<UserModel>();
+        ResultModel<UserResponse> response = new ResultModel<UserResponse>();
         try
         {
             if (id == 0)

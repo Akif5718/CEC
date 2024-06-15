@@ -1,4 +1,4 @@
-﻿--region PROCEDURE [dbo].[SelectUserById]
+﻿--region PROCEDURE [dbo].[SelectUserById] 2
 IF OBJECT_ID('[dbo].[SelectUserById]') IS NOT NULL 
     BEGIN 
         DROP PROC [dbo].[SelectUserById] 
@@ -11,17 +11,20 @@ CREATE PROC [dbo].[SelectUserById]
 )
 AS
 	SELECT
-	[Id],
-	[UserName],
-	[FirstName],
-	[LastName],
-	[AspnetUserId],
-	[UserTypeId],
-	[Email],
-	[PhoneNumber],
-	[Active]
-	FROM [dbo].[User]
-	WHERE Id=@Id
+	[U].[Id],
+	[U].[UserName],
+	[U].[FirstName],
+	[U].[LastName],
+	[U].[AspnetUserId],
+	[U].[UserTypeId],
+	[U].[Email],
+	[U].[PhoneNumber],
+	[U].[Active],
+	[H].[X],
+	[H].[Y]
+	FROM [dbo].[User] AS [U]
+	INNER JOIN [dbo].[Home] AS [H] ON [H].UserId = [U].Id
+	WHERE [U].Id=@Id
 GO
 --endregion
 

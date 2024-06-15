@@ -7,7 +7,6 @@ using CEC.Services.Interface;
 namespace CEC.API.Controllers;
 
 [ApiController]
-[RoleValidation(Roles = new string[]{"Customer"})]
 [Route("api/[controller]")]
 public class SearchController : Controller
 {

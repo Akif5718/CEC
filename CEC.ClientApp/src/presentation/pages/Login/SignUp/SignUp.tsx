@@ -27,6 +27,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   AccountCircle,
+  Email,
   Pin,
   Visibility,
   VisibilityOff,
@@ -41,6 +42,8 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../application/Redux/store/store';
+import { SignUpRequestModel } from '../../../../domain/interfaces/SignUpModel';
+import { useSignupMutation } from '../../../../infrastructure/api/AccountApiSlice';
 // import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
 
 type Props = {};
@@ -48,10 +51,48 @@ type Props = {};
 const SignUp = (props: Props) => {
   const { register, getValues, reset, control, setValue } = useForm();
   const [loading, setLoading] = useState(false);
+  const [
+    signUp,
+    {
+      isLoading: isSignUpLoading,
+      isError: isSignUpError,
+      error: errorMessage,
+      isSuccess: isSignUpSuccess,
+      data: signUpResponse,
+    },
+  ] = useSignupMutation();
+  useEffect(() => {
+    if (isSignUpSuccess) {
+      // setLoaderSpinnerForThisPage(false);
+      toast.success(signUpResponse.message);
+      navigate(`/`);
+    } else if (isSignUpError) {
+      // setLoaderSpinnerForThisPage(false);
+      const signUpError = localStorage.getItem('signUpError');
+      if (signUpError) {
+        const errorData = JSON.parse(signUpError);
+        if (errorData.data.message) {
+          toast.error(
+            `Status: ${errorData.status} - ${errorData.data.message}`
+          );
+        } else {
+          toast.error('Something went wrong');
+        }
+        localStorage.removeItem('signUpError');
+      }
+    }
+  }, [
+    isSignUpLoading,
+    isSignUpError,
+    errorMessage,
+    isSignUpSuccess,
+    signUpResponse,
+  ]);
+
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  dispatch(setNavbarShow(false));
+  dispatch(setNavbarShow(true));
 
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -588,8 +629,24 @@ const SignUp = (props: Props) => {
     (state) => state.lastRoute.from.pathname
   );
   const btnSignUp = () => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!getValues().firstName) {
+      toast.info('You have to enter your First Name');
+      return;
+    }
+    if (!getValues().lastName) {
+      toast.info('You have to enter your Last Name');
+      return;
+    }
     if (!getValues().userName) {
       toast.info('You have to enter your userName');
+      return;
+    }
+    if (!getValues().email) {
+      toast.info('You have to enter email');
+    }
+    if (!emailPattern.test(getValues().email)) {
+      toast.info('You have to enter a valid email');
       return;
     }
     if (!getValues().password) {
@@ -597,63 +654,65 @@ const SignUp = (props: Props) => {
       return;
     }
     if (getValues().password !== getValues().retypedPassword) {
-      toast.info('Password didnt match');
+      toast.info("Password didn't match");
       return;
     }
 
-    // call ajax if password is ok!!
-    // jodi password vul hoy, then alert 'password didn't match'
-    // jodi password thik hoy, then save the whole users's object in the localStorage, then otp on thakle otp er page e navigate, else navigate to redux er last savedRoute e, jodi abar redux er last savedRoute faka thake tahole dashboard e jabe navigate hoye
-
-    const sendingObj = {
-      fullName: getValues().fullName,
+    const sendingObj: SignUpRequestModel = {
+      firstName: getValues().firstName,
+      lastName: getValues().lastName,
       userName: getValues().userName,
+      email: getValues().email,
       password: getValues().password,
-      userHomeLatitude: getValues().userHomeLatitude,
-      userHomeLongitude: getValues().userHomeLongitude,
+      confirmPassword: getValues().retypedPassword,
+      x: getValues().userHomeLatitude ? getValues().userHomeLatitude : null,
+      y: getValues().userHomeLongitude ? getValues().userHomeLongitude : null,
+      phoneNumber: '',
+      userTypeId: 2,
     };
 
-    console.log('sendingObj');
-    console.log(sendingObj);
+    signUp(sendingObj);
+    // console.log('sendingObj');
+    // console.log(sendingObj);
 
-    setLoading(true);
-    axios
-      .get(`${API_BASE_URL}/login/signUp`, {
-        params: sendingObj,
-      })
-      .then((res) => {
-        console.log('insert er axios!!');
-        if (res.data) {
-          console.log(
-            'Password deyar por button chaap dile j axios call hoy oitar console'
-          );
-          console.log(res.data);
+    // setLoading(true);
+    // axios
+    //   .get(`${API_BASE_URL}/login/signUp`, {
+    //     params: sendingObj,
+    //   })
+    //   .then((res) => {
+    //     console.log('insert er axios!!');
+    //     if (res.data) {
+    //       console.log(
+    //         'Password deyar por button chaap dile j axios call hoy oitar console'
+    //       );
+    //       console.log(res.data);
 
-          if (res.data.securityUserId) {
-            const dataToSaveInCache = res.data;
-            console.log('userInfo');
-            console.log(dataToSaveInCache);
-            dataToSaveInCache.encryptedPassword = dataToSaveInCache.password;
-            dataToSaveInCache.password = getValues().password;
-            localStorage.setItem('userInfo', JSON.stringify(dataToSaveInCache));
+    //       if (res.data.securityUserId) {
+    //         const dataToSaveInCache = res.data;
+    //         console.log('userInfo');
+    //         console.log(dataToSaveInCache);
+    //         dataToSaveInCache.encryptedPassword = dataToSaveInCache.password;
+    //         dataToSaveInCache.password = getValues().password;
+    //         localStorage.setItem('userInfo', JSON.stringify(dataToSaveInCache));
 
-            dispatch(setNavbarShow(true));
-            if (lastSavedRoute) {
-              navigate(`${lastSavedRoute}`);
-            } else {
-              navigate(`/home`);
-            }
-          }
-        }
-      })
-      .catch((error) => {
-        // Handle error
-        toast.error(`something wrong in backend: ${error}`);
-        console.error(`something wrong in backend: ${error}`);
-      })
-      .finally(() => {
-        setLoading(false); // Set loading state to false when axios finishes
-      });
+    //         dispatch(setNavbarShow(true));
+    //         if (lastSavedRoute) {
+    //           navigate(`${lastSavedRoute}`);
+    //         } else {
+    //           navigate(`/home`);
+    //         }
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     // Handle error
+    //     toast.error(`something wrong in backend: ${error}`);
+    //     console.error(`something wrong in backend: ${error}`);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false); // Set loading state to false when axios finishes
+    //   });
   };
 
   // password eye button to show/hide pass
@@ -675,7 +734,7 @@ const SignUp = (props: Props) => {
       />
 
       <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center">
-        <div className="block w-[30%] z-[0]">Akifs Project</div>
+        {/* <div className="block w-[30%] z-[0]">Akifs Project</div> */}
         <div className="block w-[30%] z-[0]">
           {/* Main Card */}
           <div className=" block rounded-lg shadow-lg bg-transparent backdrop-blur-sm dark:bg-secondary-dark-bg  text-center">
@@ -697,10 +756,10 @@ const SignUp = (props: Props) => {
                     variant="outlined"
                   >
                     <InputLabel htmlFor="outlined-adornment-username">
-                      Full Name
+                      First Name
                     </InputLabel>
                     <OutlinedInput
-                      {...register('fullName')}
+                      {...register('firstName')}
                       id="outlined-adornment-username"
                       type="text"
                       onKeyPress={(event) => {
@@ -708,7 +767,27 @@ const SignUp = (props: Props) => {
                           btnSignUp();
                         }
                       }}
-                      label="Full Name"
+                      label="First Name"
+                    />
+                  </FormControl>
+                  <FormControl
+                    sx={{ m: 1, width: '100%' }}
+                    size="small"
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-username">
+                      Last Name
+                    </InputLabel>
+                    <OutlinedInput
+                      {...register('lastName')}
+                      id="outlined-adornment-username"
+                      type="text"
+                      onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                          btnSignUp();
+                        }
+                      }}
+                      label="Last Name"
                     />
                   </FormControl>
 
@@ -734,10 +813,35 @@ const SignUp = (props: Props) => {
                           btnSignUp();
                         }
                       }}
-                      label="Full Name"
+                      label="User Name"
                     />
                   </FormControl>
 
+                  <FormControl
+                    sx={{ m: 1, width: '100%' }}
+                    size="small"
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-username">
+                      Email
+                    </InputLabel>
+                    <OutlinedInput
+                      {...register('email')}
+                      id="outlined-adornment-username"
+                      type="text"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <Email />
+                        </InputAdornment>
+                      }
+                      onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                          btnSignUp();
+                        }
+                      }}
+                      label="Email"
+                    />
+                  </FormControl>
                   <FormControl
                     sx={{ m: 1, width: '100%' }}
                     size="small"

@@ -16,6 +16,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { BsCurrencyDollar, BsShield } from 'react-icons/bs';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { FiCreditCard } from 'react-icons/fi';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -119,54 +120,37 @@ const UserProfile = () => {
 
   const [userAllInfo, setUserAllInfo] = useState([]);
   // 1st ei logged in user er company gula anlam, then logged in user j company te already logged in shei companyr location gula analam
-  useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}/Login/getUserAllInfo`, {
-        params: {
-          userName: userInfo?.userName,
-          password: userInfo?.encryptedPassword,
-        },
-        headers: {
-          Authorization: `Bearer ${userInfo?.userToken || ''}`,
-        },
-      })
-      .then((response: any) => {
-        // Handle success
-        setUserAllInfo(response.data);
-      })
-      .catch((error: any) => {
-        // Handle error
-        toast.error('Error fetching users all infos:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${API_BASE_URL}/Login/getUserAllInfo`, {
+  //       params: {
+  //         userName: userInfo?.userName,
+  //         password: userInfo?.encryptedPassword,
+  //       },
+  //       headers: {
+  //         Authorization: `Bearer ${userInfo?.userToken || ''}`,
+  //       },
+  //     })
+  //     .then((response: any) => {
+  //       // Handle success
+  //       setUserAllInfo(response.data);
+  //     })
+  //     .catch((error: any) => {
+  //       // Handle error
+  //       toast.error('Error fetching users all infos:', error);
+  //     });
+  // }, []);
 
-  const userProfileData = [
-    {
-      icon: <BsCurrencyDollar />,
-      title: 'My Profile',
-      desc: 'Account Settings',
-      iconColor: '#03C9D7',
-      iconBg: '#E5FAFB',
-      onClickFunc: () => {
-        setUserProfileEditModalOpen(true);
-      },
+  const userProfileData = {
+    icon: <SettingsIcon />,
+    title: 'My Profile',
+    desc: 'Account Settings',
+    iconColor: '#03C9D7',
+    iconBg: '#E5FAFB',
+    onClickFunc: () => {
+      navigate('/userProfile');
     },
-    // {
-    //   icon: <BsShield />,
-    //   title: 'My Inbox',
-    //   desc: 'Messages & Emails',
-    //   iconColor: 'rgb(0, 194, 146)',
-    //   iconBg: 'rgb(235, 250, 242)',
-    // },
-    // {
-    //   icon: <FiCreditCard />,
-    //   title: 'My Tasks',
-    //   desc: 'To-do and Daily Tasks',
-    //   iconColor: 'rgb(255, 244, 229)',
-    //   iconBg: 'rgb(254, 201, 15)',
-    // },
-  ];
-
+  };
   return (
     <div className="nav-item z-[1000000] absolute right-1 top-16 bg-slate-700 border backdrop-blur-3xl dark:bg-[#42464D] p-8 rounded-lg w-96">
       <div className="flex justify-between items-center">
@@ -211,28 +195,32 @@ const UserProfile = () => {
         </div>
       </div>
       <div>
-        {userProfileData.map((item: any) => (
-          <div
-            key={uuidv4()}
-            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
+        <div
+          key={uuidv4()}
+          onClick={userProfileData.onClickFunc}
+          className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
+        >
+          <button
+            type="button"
+            style={{
+              color: userProfileData.iconColor,
+              backgroundColor: userProfileData.iconBg,
+            }}
+            className=" text-xl rounded-lg p-3 hover:bg-light-gray"
           >
-            <button
-              type="button"
-              style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-              className=" text-xl rounded-lg p-3 hover:bg-light-gray"
-            >
-              {item.icon}
-            </button>
+            {userProfileData.icon}
+          </button>
 
-            <div>
-              <p className="font-semibold dark:text-gray-200 ">{item.title}</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400">
-                {' '}
-                {item.desc}{' '}
-              </p>
-            </div>
+          <div>
+            <p className="font-semibold dark:text-gray-200 ">
+              {userProfileData.title}
+            </p>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              {' '}
+              {userProfileData.desc}{' '}
+            </p>
           </div>
-        ))}
+        </div>
       </div>
       <div className="mt-5">
         <button

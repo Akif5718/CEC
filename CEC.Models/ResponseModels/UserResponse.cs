@@ -9,6 +9,7 @@ namespace CEC.Models.ResponseModels
 {
     public class UserResponse : UserModel
     {
-        
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 }

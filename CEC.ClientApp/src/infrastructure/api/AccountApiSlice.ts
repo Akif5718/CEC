@@ -5,8 +5,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { toast } from 'react-toastify';
 import { API_BASE_URL } from '../../../public/apiConfig.json';
 import { getToken } from '../Auth/JWTSecurity/jwtTokenManager';
-import { ILoginRequest, ILoginResponse } from '../../domain/interfaces/LoginModel';
+import {
+  ILoginRequest,
+  ILoginResponse,
+} from '../../domain/interfaces/LoginModel';
 import { ResultModel } from '../../domain/interfaces/ResultModel';
+import { SignUpRequestModel } from '../../domain/interfaces/SignUpModel';
+import { UserResponseModel } from '../../domain/interfaces/UserResponseModel';
 
 const controllerName: string = `Account`;
 
@@ -15,12 +20,12 @@ export const AccountApiSlice = createApi({
   reducerPath: 'AccountApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${API_BASE_URL}/${controllerName}/`,
-    prepareHeaders: async (headers, {endpoint}) => {
-      if (endpoint !== 'login') {
+    prepareHeaders: async (headers, { endpoint }) => {
+      if (endpoint !== 'login' && endpoint !== 'signup') {
         const token = await getToken();
         const jsonUserInfo = localStorage.getItem('userInfo');
         let userId = 0;
-        if(jsonUserInfo){
+        if (jsonUserInfo) {
           userId = JSON.parse(jsonUserInfo).userId as number;
         }
         if (token) {
@@ -33,14 +38,9 @@ export const AccountApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: [
-    'userInfo',
-  ],
+  tagTypes: ['userInfo'],
   endpoints: (builder) => ({
-    login: builder.mutation<
-    ResultModel<ILoginResponse>,
-    ILoginRequest
-    >({
+    login: builder.mutation<ResultModel<ILoginResponse>, ILoginRequest>({
       query: (objToSend: ILoginRequest) => ({
         url: 'Login',
         method: 'POST',
@@ -50,16 +50,30 @@ export const AccountApiSlice = createApi({
         try {
           const { data } = await queryFulfilled;
           // Save the response to localStorage
-          localStorage.setItem('userInfo', (JSON.stringify(data.data)));
-        } catch (error : any) {
-          localStorage.setItem('loginError', JSON.stringify(error.error) );
+          localStorage.setItem('userInfo', JSON.stringify(data.data));
+        } catch (error: any) {
+          localStorage.setItem('loginError', JSON.stringify(error.error));
         }
-    }
+      },
     }),
-    
+
+    signup: builder.mutation<ResultModel<boolean>, SignUpRequestModel>({
+      query: (objToSend: ILoginRequest) => ({
+        url: 'register',
+        method: 'POST',
+        body: objToSend,
+      }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          // Save the response to localStorage
+          toast.success(data.message);
+        } catch (error: any) {
+          localStorage.setItem('signUpError', JSON.stringify(error.error));
+        }
+      },
+    }),
   }),
 });
 
-export const {
-    useLoginMutation
-} = AccountApiSlice;
+export const { useLoginMutation, useSignupMutation } = AccountApiSlice;

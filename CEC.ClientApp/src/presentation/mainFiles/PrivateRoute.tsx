@@ -7,7 +7,7 @@ const PrivateRoute: React.FC<{
   element: React.ReactNode;
 }> = ({ element }) => {
   const tempVar = localStorage.getItem('userInfo') || 'false';
-  const isAuthenticated = JSON.parse(tempVar)?.id || false;
+  const isAuthenticated = JSON.parse(tempVar)?.userId || false;
   const dispatch = useAppDispatch();
   const location = useLocation();
 

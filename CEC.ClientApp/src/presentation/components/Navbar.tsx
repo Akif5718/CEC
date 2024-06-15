@@ -134,64 +134,63 @@ const Navbar = () => {
         scrollNavbarShow && showNavbar ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
-      <div 
-        className="ml-10 flex items-center" 
+      <div
+        className="ml-10 flex items-center"
         onClick={() => {
           navigate(`/`);
         }}
       >
-        <img src={logo} alt="Brand Logo" className="h-16 w-16" /> {/* Logo container */}
-        <h3 className='ml-4 text-white'>Care Edu Compass</h3>
+        <img src={logo} alt="Brand Logo" className="h-16 w-16" />{' '}
+        {/* Logo container */}
+        <h3 className="ml-4 text-white">Care Edu Compass</h3>
       </div>
 
       <div className="flex justify-end items-center">
-        <button
-          type="button"
-          data-mdb-ripple="true"
-          data-mdb-ripple-color="light"
-          className="inline-block px-6 py-1 mx-4 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg hover:scale-110 focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-900  active:-translate-y-1 active:shadow-lg transform-all duration-150 ease-in-out"
-          onClick={() => {
-            navigate(`/signIn`);
-          }}
-        >
-          Sign In
-        </button>
+        {userInfo?.userId ? (
+          <Tooltip title="Profile" placement="bottom" arrow>
+            <div
+              className="flex items-center gap-2 cursor-pointer p-1 focus:shadow-lg focus:outline-none focus:ring-0 active:-translate-y-1 active:shadow-lg hover:bg-light-gray hover:scale-105 transform-gpu tranform-all duration-300 rounded-lg"
+              role="button"
+              tabIndex={0}
+              onKeyDown={() => {
+                dispatch(
+                  toggleACertainFeatureClick({ propertyName: 'userProfile' })
+                );
+              }}
+              onClick={() => {
+                dispatch(
+                  toggleACertainFeatureClick({ propertyName: 'userProfile' })
+                );
+              }}
+            >
+              <img
+                alt="userProfilePic"
+                className="rounded-full w-8 h-8"
+                src={avatar}
+              />
+              <p>
+                <span className="text-gray-400 text-14">Hi, </span>
 
-        <Tooltip
-          title="Profile"
-          placement="bottom"
-          arrow
-        >
-          <div
-            className="flex items-center gap-2 cursor-pointer p-1 focus:shadow-lg focus:outline-none focus:ring-0 active:-translate-y-1 active:shadow-lg hover:bg-light-gray hover:scale-105 transform-gpu tranform-all duration-300 rounded-lg"
-            role="button"
-            tabIndex={0}
-            onKeyDown={() => {
-              dispatch(
-                toggleACertainFeatureClick({ propertyName: 'userProfile' })
-              );
-            }}
+                <span className="text-gray-400 font-bold ml-1 text-14">
+                  {userInfo?.userName ? userInfo.userName : 'Anonymous'}
+                </span>
+              </p>
+              <MdKeyboardArrowDown className="text-gray-400 text-14" />
+            </div>
+          </Tooltip>
+        ) : (
+          <button
+            type="button"
+            data-mdb-ripple="true"
+            data-mdb-ripple-color="light"
+            className="inline-block px-6 py-1 mx-4 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg hover:scale-110 focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-900  active:-translate-y-1 active:shadow-lg transform-all duration-150 ease-in-out"
             onClick={() => {
-              dispatch(
-                toggleACertainFeatureClick({ propertyName: 'userProfile' })
-              );
+              navigate(`/signIn`);
             }}
           >
-            <img
-              alt="userProfilePic"
-              className="rounded-full w-8 h-8"
-              src={avatar}
-            />
-            <p>
-              <span className="text-gray-400 text-14">Hi, </span>
-
-              <span className="text-gray-400 font-bold ml-1 text-14">
-                {userInfo?.userName ? userInfo.userName : 'Anonymous'}
-              </span>
-            </p>
-            <MdKeyboardArrowDown className="text-gray-400 text-14" />
-          </div>
-        </Tooltip>
+            Sign In
+          </button>
+        )}
 
         {isClicked.cart && <Cart />}
         {isClicked.chat && <Chat />}

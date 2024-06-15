@@ -7,8 +7,8 @@ namespace CEC.Services.Interface
 {
     public interface IUserService
     {
-        Task<ResultModel<UserModel>> SaveUser(UserHomeRequestModel model);
-        Task<ResultModel<UserModel>> GetUserById(int id);
+        Task<ResultModel<UserResponse>> SaveUser(UserHomeRequestModel model);
+        Task<ResultModel<UserResponse>> GetUserById(int id);
         Task<ResultModel<List<UserResponse>>> GetAllUser(UserListModel model);
         Task<ResultModel<int>> GetAllUserCount(UserListModel model);
         Task<ResultModel<bool>> IsUserNameUnique(string? userName);

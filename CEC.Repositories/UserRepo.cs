@@ -53,9 +53,9 @@ namespace CEC.Repositories
             }
         }
 
-        public async Task<ResultModel<UserModel>> GetUserById(int id)
+        public async Task<ResultModel<UserResponse>> GetUserById(int id)
         {
-            ResultModel<UserModel> resultModel = new ResultModel<UserModel>();
+            ResultModel<UserResponse> resultModel = new ResultModel<UserResponse>();
             _logger.LogInformation("Going to execute Method: SaveUser, Class: UserRepo");
             try
             {
@@ -64,7 +64,7 @@ namespace CEC.Repositories
 			    param.Add("@Id", id, DbType.Int32, ParameterDirection.Input, null);
 
                 resultModel.Data = await Connection
-                    .QueryFirstOrDefaultAsync<UserModel>(SPDBConstants.SELECT_USER_BY_ID, param, commandType: CommandType.StoredProcedure);
+                    .QueryFirstOrDefaultAsync<UserResponse>(SPDBConstants.SELECT_USER_BY_ID, param, commandType: CommandType.StoredProcedure);
                 resultModel.Message = "Executed successfully";
                 resultModel.IsSuccess = true;
                 _logger.LogInformation("Execution completed Method: GetUserById, Class: UserRepo");

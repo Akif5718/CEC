@@ -21,7 +21,7 @@ namespace CEC.Services
             _userManager = userManager;
         }
 
-        public async Task<ResultModel<UserModel>> SaveUser(UserHomeRequestModel model)
+        public async Task<ResultModel<UserResponse>> SaveUser(UserHomeRequestModel model)
         {
             var identityUser = await _userManager.FindByEmailAsync(model.UserName) ?? await _userManager.FindByNameAsync(model.UserName);
             
@@ -36,7 +36,7 @@ namespace CEC.Services
             return await GetUserById(result);
         }
 
-        public async Task<ResultModel<UserModel>> GetUserById(int id)
+        public async Task<ResultModel<UserResponse>> GetUserById(int id)
         {
             _logger.LogInformation("Going to execute Method: GetUserById, Class: UserService");
             var result = await _repo.GetUserById(id);
