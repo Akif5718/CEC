@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CEC.Models.ViewModels
 {
-    public class RegisterUserModel
+    public class RegisterUserModel : HomeRequestModel
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]

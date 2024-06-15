@@ -4,6 +4,7 @@ using CEC.Models.ViewModels;
 using CEC.Repositories;
 using CEC.Repositories.Interface;
 using CEC.Services.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace CEC.Services
@@ -11,15 +12,24 @@ namespace CEC.Services
     public class UserService : IUserService
     {
         private readonly ILogger<UserRepo> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserRepo _repo;
-        public UserService(ILogger<UserRepo> logger, IUserRepo repo)
+        public UserService(ILogger<UserRepo> logger, IUserRepo repo, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _repo = repo;
+            _userManager = userManager;
         }
 
-        public async Task<ResultModel<UserModel>> SaveUser(UserModel model)
+        public async Task<ResultModel<UserModel>> SaveUser(UserHomeRequestModel model)
         {
+            var identityUser = await _userManager.FindByEmailAsync(model.UserName) ?? await _userManager.FindByNameAsync(model.UserName);
+            
+            if (identityUser is not null)
+            {
+                model.AspnetUserId = identityUser.Id;
+                model.Email = identityUser.Email;
+            }
             _logger.LogInformation("Going to execute Method: SaveUser, Class: UserService");
             var result = await _repo.SaveUser(model);
             _logger.LogInformation("Execution completed Method: SaveUser, Class: UserService");

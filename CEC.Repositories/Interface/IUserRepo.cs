@@ -8,7 +8,7 @@ namespace CEC.Repositories.Interface
 {
     public interface IUserRepo
     {
-        Task<int> SaveUser(UserModel model);
+        Task<int> SaveUser(UserHomeRequestModel model);
         Task<ResultModel<UserModel>> GetUserById(int id);
         Task<ResultModel<List<UserResponse>>> GetAllUser(UserListModel model);
         Task<ResultModel<int>> GetAllUserCount(UserListModel model);

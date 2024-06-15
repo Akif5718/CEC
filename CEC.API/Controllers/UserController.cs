@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CEC.API.Controllers;
 
 [ApiController]
-[RoleValidation(Roles = new string[]{"Admin"})]
 [Route("api/[controller]")]
 public class UserController : Controller
 {
@@ -20,6 +19,7 @@ public class UserController : Controller
         _userService = userService;
     }
     
+    [RoleValidation(Roles = new string[]{"Admin,Customer"})]
     [HttpPost()]
     [Route("get-by-id")]
     public async Task<IActionResult> GetUserById([FromBody] int id)
@@ -54,6 +54,7 @@ public class UserController : Controller
         return StatusCode(500);
     }
     
+    [RoleValidation(Roles = new string[]{"Admin"})]
     [HttpPost()]
     [Route("get-all")]
     public async Task<IActionResult> GetAllUsers(UserListModel user)
@@ -81,6 +82,7 @@ public class UserController : Controller
         return StatusCode(500);
     }
     
+    [RoleValidation(Roles = new string[]{"Admin"})]
     [HttpPost()]
     [Route("get-all-count")]
     public async Task<IActionResult> GetAllUserCount(UserListModel user)
@@ -106,6 +108,20 @@ public class UserController : Controller
             _logger.LogError("GetAllUserCount - Exception : " + ex.ToString());
         }
         return StatusCode(500);
+    }
+    [RoleValidation(Roles = new string[]{"Admin,Customer"})]
+    [HttpPost("save")]
+    public async Task<IActionResult> SaveUser(UserHomeRequestModel requestModel)
+    {
+        _logger.LogInformation("Going to execute _userService.SaveUser()");
+        var result = await _userService.SaveUser(requestModel);
+        _logger.LogInformation("Execution completed _userService.SaveUser()");
+
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     
     

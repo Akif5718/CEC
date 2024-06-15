@@ -23,7 +23,7 @@ namespace CEC.Repositories
             _logger = logger;
         }
 
-        public async Task<int> SaveUser(UserModel model)
+        public async Task<int> SaveUser(UserHomeRequestModel model)
         {
             ResultModel<UserModel> resultModel = new ResultModel<UserModel>();
             _logger.LogInformation("Going to execute Method: SaveUser, Class: UserRepo");
@@ -40,6 +40,8 @@ namespace CEC.Repositories
 			    param.Add("@Email", model.Email, DbType.String, ParameterDirection.Input, null);
 			    param.Add("@PhoneNumber", model.PhoneNumber, DbType.String, ParameterDirection.Input, null);
 			    param.Add("@Active", model.Active, DbType.Boolean, ParameterDirection.Input, null);
+			    param.Add("@X", model.X, DbType.Double, ParameterDirection.Input, null);
+			    param.Add("@Y", model.Y, DbType.Double, ParameterDirection.Input, null);
 
                 return await Connection
                     .ExecuteScalarAsync<int>(SPDBConstants.SAVE_USER, param, commandType: CommandType.StoredProcedure);

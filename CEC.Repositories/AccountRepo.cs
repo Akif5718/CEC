@@ -59,7 +59,7 @@ namespace CEC.Repositories
                 if (result.Succeeded)
                 {
                     var iUser = await _userManager.FindByEmailAsync(model.Email);
-                    UserModel user = new UserModel()
+                    UserHomeRequestModel user = new UserHomeRequestModel()
                     {
                         Id = 0,
                         Email = model.Email,
@@ -69,7 +69,9 @@ namespace CEC.Repositories
                         UserName = model.UserName,
                         AspnetUserId = iUser.Id,
                         UserTypeId = model.UserTypeId,
-                        Active = true
+                        Active = true,
+                        X = model.X,
+                        Y = model.Y
                     };
                     _userRepo.SaveUser(user);
                     resultModel.Data = true;

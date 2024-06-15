@@ -16,7 +16,9 @@ CREATE PROC [dbo].[SaveUser]
 	@UserTypeId INT,
 	@Email NVARCHAR (50), 
 	@PhoneNumber NVARCHAR (50), 
-	@Active BIT 
+	@Active BIT,
+	@X FLOAT,
+	@Y FLOAT 
 )
 AS
 DECLARE @LocalId INT = @Id;
@@ -43,6 +45,21 @@ BEGIN
 		[UserName] = @LocalUserName, [FirstName] = @LocalFirstName, [LastName] = @LocalLastName, [AspnetUserId] = @LocalAspnetUserId, [UserTypeId] = @LocalUserTypeId, [Email] = @LocalEmail, [PhoneNumber] = @LocalPhoneNumber, [Active] = @LocalActive
 		WHERE [Id] = @LocalId
 END
+
+IF @X IS NOT NULL AND @Y IS NOT NULL
+    BEGIN
+        IF EXISTS (SELECT 1 FROM dbo.[Home] WHERE UserId = @LocalId)
+        BEGIN
+            UPDATE dbo.[Home]
+            SET X = @X, Y = @Y
+            WHERE UserId = @LocalId;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO dbo.[Home] (UserId, X, Y)
+            VALUES (@LocalId, @X, @Y);
+        END
+    END
 SELECT @LocalId
 GO
 --endregion

@@ -13,6 +13,7 @@ Tables/AspNetTables/AspNetUserClaims.sql
 ## CECTables
 Tables/CEC/Setting.sql
 Tables/CEC/User.sql
+Tables/CEC/Home.sql
 
 # Alter
 
