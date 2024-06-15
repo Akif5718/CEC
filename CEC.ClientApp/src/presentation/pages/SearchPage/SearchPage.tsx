@@ -47,7 +47,7 @@ const SearchPage: React.FC = () => {
   useEffect(() => {
     if (isUserByIdSuccess && userByIdResponse && userByIdResponse.data) {
       setHome({ x: userByIdResponse.data.x, y: userByIdResponse.data.y });
-    } else if (isError) {
+    } else if (isUserByIdError) {
       // Handle error state
       toast.error('An error occurred');
     }
