@@ -6,9 +6,9 @@ using CEC.Models.ViewModels;
 
 namespace CEC.Repositories.Interface
 {
-    public interface ISearchRepo
+    public interface IFavouriteRepo
     {
-        Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model, int userId);
+        Task<ResultModel<bool>> SaveFavourite(FavouriteRequestModel model);
     }
  }
 

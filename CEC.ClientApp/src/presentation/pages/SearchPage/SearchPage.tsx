@@ -12,6 +12,8 @@ import { MarkerData } from '../../../domain/interfaces/MarkerData';
 import { useGetUserByIdMutation } from '../../../infrastructure/api/UserApiSlice';
 import { UserResponseModel } from '../../../domain/interfaces/UserResponseModel';
 import { Home } from '@mui/icons-material';
+import { FavouriteRequestModel } from '../../../domain/interfaces/FavouriteModel';
+import { useSaveFavouriteMutation } from '../../../infrastructure/api/FavouriteApiSlice';
 
 interface IHome {
   x: number;
@@ -21,11 +23,15 @@ interface IHome {
 const SearchPage: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [home, setHome] = useState<IHome | null>(null);
+  const [favFacility, setFavFacility] = useState<FavouriteRequestModel | null>(
+    null
+  );
   const [searchReq, setSearchReq] = useState<SearchRequestModel>({
     isJugendberufshilfen: true,
     isKindertageseinrichtungen: false,
     isSchulen: false,
     isSchulsozialarbeit: false,
+    isFavourite: false,
   });
   const [searchResponseData, setSearchResponseData] =
     useState<SearchResponseModel>({
@@ -52,6 +58,25 @@ const SearchPage: React.FC = () => {
       toast.error('An error occurred');
     }
   }, [isUserByIdLoading, isUserByIdError, isUserByIdSuccess, userByIdResponse]);
+
+  const [
+    saveFavourite,
+    {
+      isLoading: isSaveFavLoading,
+      isError: isSaveFavError,
+      isSuccess: isSaveFavSuccess,
+      data: saveFavResponse,
+    },
+  ] = useSaveFavouriteMutation();
+
+  useEffect(() => {
+    if (isSaveFavSuccess && saveFavResponse && saveFavResponse.data) {
+      toast.success('Favourite facilities are updated successfully');
+    } else if (isSaveFavError) {
+      // Handle error state
+      toast.error('An error occurred');
+    }
+  }, [isSaveFavLoading, isSaveFavError, isSaveFavSuccess, saveFavResponse]);
   useEffect(() => {
     const jsonUserInfo = localStorage.getItem('userInfo');
     if (jsonUserInfo) {
@@ -61,6 +86,11 @@ const SearchPage: React.FC = () => {
       }
     }
   }, []);
+  useEffect(() => {
+    if (favFacility !== null) {
+      saveFavourite(favFacility);
+    }
+  }, [favFacility]);
   const {
     isLoading,
     isError,
@@ -98,6 +128,7 @@ const SearchPage: React.FC = () => {
       isJugendberufshilfen: selectedCategories.includes('Jugendberufshilfen')
         ? true
         : false,
+      isFavourite: selectedCategories.includes('Favourite') ? true : false,
     });
   }, [selectedCategories]);
 
@@ -121,6 +152,7 @@ const SearchPage: React.FC = () => {
                 ? { x: home.x, y: home.y, category: 'Home', details: {} }
                 : null
             }
+            setFavFacility={setFavFacility}
           />
         </div>
       </div>
@@ -141,12 +173,14 @@ const transformDataToMarkers = (data: SearchResponseModel): MarkerData[] => {
       y: parseFloat(item.y),
       category: 'Jugendberufshilfen',
       details: {
-        BEZEICHNUNG: item.bezeichnung,
-        ORT: item.ort,
-        PLZ: item.plz,
-        STRASSE: item.strasse,
-        TELEFON: item.telefon,
-        EMAIL: item.email,
+        bezeichnung: item.bezeichnung,
+        ort: item.ort,
+        plz: item.plz,
+        strasse: item.strasse,
+        telefon: item.telefon,
+        email: item.email,
+        isFavourite: item.isFavourite,
+        id: item.id,
         // Add other properties as needed
       },
     })),
@@ -155,12 +189,14 @@ const transformDataToMarkers = (data: SearchResponseModel): MarkerData[] => {
       y: parseFloat(item.y),
       category: 'Schulen',
       details: {
-        BEZEICHNUNG: item.bezeichnung,
-        ORT: item.ort,
-        PLZ: item.plz,
-        STRASSE: item.strasse,
-        TELEFON: item.telefon,
-        EMAIL: item.email,
+        bezeichnung: item.bezeichnung,
+        ort: item.ort,
+        plz: item.plz,
+        strasse: item.strasse,
+        telefon: item.telefon,
+        email: item.email,
+        isFavourite: item.isFavourite,
+        id: item.id,
         // Add other properties as needed
       },
     })),
@@ -169,12 +205,14 @@ const transformDataToMarkers = (data: SearchResponseModel): MarkerData[] => {
       y: parseFloat(item.y),
       category: 'Schulsozialarbeit',
       details: {
-        BEZEICHNUNG: item.bezeichnung,
-        ORT: item.ort,
-        PLZ: item.plz,
-        STRASSE: item.strasse,
-        TELEFON: item.telefon,
-        EMAIL: item.email,
+        bezeichnung: item.bezeichnung,
+        ort: item.ort,
+        plz: item.plz,
+        strasse: item.strasse,
+        telefon: item.telefon,
+        email: item.email,
+        isFavourite: item.isFavourite,
+        id: item.id,
         // Add other properties as needed
       },
     })),
@@ -183,12 +221,14 @@ const transformDataToMarkers = (data: SearchResponseModel): MarkerData[] => {
       y: parseFloat(item.y),
       category: 'Kindertageseinrichtungen',
       details: {
-        BEZEICHNUNG: item.bezeichnung,
-        ORT: item.ort,
-        PLZ: item.plz,
-        STRASSE: item.strasse,
-        TELEFON: item.telefon,
-        EMAIL: item.email,
+        bezeichnung: item.bezeichnung,
+        ort: item.ort,
+        plz: item.plz,
+        strasse: item.strasse,
+        telefon: item.telefon,
+        email: item.email,
+        isFavourite: item.isFavourite,
+        id: item.id,
         // Add other properties as needed
       },
     })),

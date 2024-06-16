@@ -19,10 +19,10 @@ namespace CEC.Services
         }
 
 
-        public async Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model)
+        public async Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model, int userId)
         {
             _logger.LogInformation("Going to execute Method: GetAllData, Class: SearchService");
-            var result = await _repo.GetAllData(model);
+            var result = await _repo.GetAllData(model, userId);
             _logger.LogInformation("Execution completed Method: GetAllData, Class: SearchService");
             return result;
         }

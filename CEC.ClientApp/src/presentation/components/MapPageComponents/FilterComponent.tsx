@@ -15,6 +15,7 @@ const categories = [
   { categoryId: 2, name: 'Schulen', color: 'bg-[#32CD32]' },
   { categoryId: 3, name: 'Kindertageseinrichtungen', color: 'bg-[#1E90FF]' },
   { categoryId: 4, name: 'Jugendberufshilfen', color: 'bg-[orange]' },
+  { categoryId: 5, name: 'Favourite', color: 'bg-[gray]' },
 ];
 
 interface FilterProps {

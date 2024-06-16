@@ -13,4 +13,7 @@ public class SPDBConstants
     
     //Search
     public const string SEARCH_MAP_DATA = "dbo.SearchMapData";
+    
+    //Favourite
+    public const string SAVE_FAVOURITE = "dbo.SaveFavourite";
 }

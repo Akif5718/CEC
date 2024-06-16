@@ -18,21 +18,21 @@ export const SearchApiSlice = createApi({
   reducerPath: 'SearchApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${API_BASE_URL}/${controllerName}/`,
-    // prepareHeaders: async (headers) => {
-    //   const token = await getToken();
-    //   const jsonUserInfo = localStorage.getItem('userInfo');
-    //   let userId = 0;
-    //   if (jsonUserInfo) {
-    //     userId = JSON.parse(jsonUserInfo).userId as number;
-    //   }
-    //   if (token) {
-    //     headers.set('Authorization', `Bearer ${token}`);
-    //   }
-    //   if (userId) {
-    //     headers.set('UserId', userId.toString()); // Setting user ID in headers
-    //   }
-    //   return headers;
-    // },
+    prepareHeaders: async (headers) => {
+      const token = await getToken();
+      const jsonUserInfo = localStorage.getItem('userInfo');
+      let userId = 0;
+      if (jsonUserInfo) {
+        userId = JSON.parse(jsonUserInfo).userId as number;
+      }
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      if (userId) {
+        headers.set('UserId', userId.toString()); // Setting user ID in headers
+      }
+      return headers;
+    },
   }),
   tagTypes: ['searchResult'],
   endpoints: (builder) => ({

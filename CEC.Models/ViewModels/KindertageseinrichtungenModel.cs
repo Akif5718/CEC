@@ -24,4 +24,5 @@ public class KindertageseinrichtungenModel
     public string? URL { get; set; }
     public string? X { get; set; }
     public string? Y { get; set; }
+    public bool IsFavourite { get; set; }
 }

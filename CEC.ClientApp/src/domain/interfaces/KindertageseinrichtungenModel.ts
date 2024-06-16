@@ -19,4 +19,5 @@ export interface KindertageseinrichtungenModel {
   url: string;
   x: string;
   y: string;
+  isFavourite: boolean;
 }

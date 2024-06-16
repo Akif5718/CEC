@@ -19,11 +19,13 @@ namespace CEC.Services.Extensions
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IFavouriteService, FavouriteService>();
 
             //Repositories
             services.AddTransient<IAccountRepo, AccountRepo>();
             services.AddTransient<IUserRepo, UserRepo>();
             services.AddTransient<ISearchRepo, SearchRepo>();
+            services.AddTransient<IFavouriteRepo, FavouriteRepo>();
 
             return services;
         }

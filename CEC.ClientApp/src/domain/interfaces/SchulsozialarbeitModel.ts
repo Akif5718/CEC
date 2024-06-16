@@ -13,4 +13,5 @@ export interface SchulsozialarbeitModel {
   traeger: string;
   x: string;
   y: string;
+  isFavourite: boolean;
 }

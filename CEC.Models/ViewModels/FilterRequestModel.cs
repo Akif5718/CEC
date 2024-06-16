@@ -6,4 +6,5 @@ public class FilterRequestModel
     public bool IsSchulen { get; set; }
     public bool IsKindertageseinrichtungen { get; set; }
     public bool IsJugendberufshilfen { get; set; }
+    public bool IsFavourite { get; set; }
 }

@@ -13,4 +13,5 @@ export interface JugendberufshilfenModel {
   traeger: string;
   x: string;
   y: string;
+  isFavourite: boolean;
 }

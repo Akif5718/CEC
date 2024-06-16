@@ -5,9 +5,9 @@ using CEC.Models.ViewModels;
 
 namespace CEC.Services.Interface
 {
-    public interface ISearchService
+    public interface IFavouriteService
     {
-        Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model, int userId);
+        Task<ResultModel<bool>> SaveFavourite(FavouriteRequestModel model);
     }
  }
 

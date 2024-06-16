@@ -23,10 +23,14 @@ public class SearchController : Controller
     public async Task<IActionResult> GetAllData(FilterRequestModel filterRequest)
     {
         _logger.LogInformation("GetAllData starts");
+        var userId = 0;
+        var userIdInRequest = Request.Headers.Where(h => h.Key.Equals("UserId", StringComparison.OrdinalIgnoreCase))
+            .Select(h => h.Value).FirstOrDefault();
+        int.TryParse(userIdInRequest, out userId);
         try
         {
             _logger.LogInformation($"Going to execute _userService.GetAllData()");
-            var response = await _searchService.GetAllData(filterRequest);
+            var response = await _searchService.GetAllData(filterRequest,userId);
             _logger.LogInformation($"Completed _userService.GetAllData()");
             if (response.Data != null)
             {

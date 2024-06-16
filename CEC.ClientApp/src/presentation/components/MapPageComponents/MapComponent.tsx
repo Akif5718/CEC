@@ -8,6 +8,13 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import axios from 'axios'; // Import Axios for HTTP requests
 import { DataGrid, GridColDef } from '@mui/x-data-grid'; // Import DataGrid and GridColDef from Material-UI
 import { Home as HomeIcon } from '@mui/icons-material'; // Import HomeIcon from Material-UI
+import { SchulsozialarbeitModel } from '../../../domain/interfaces/SchulsozialarbeitModel';
+import { SchulenModel } from '../../../domain/interfaces/SchulenModel';
+import { KindertageseinrichtungenModel } from '../../../domain/interfaces/KindertageseinrichtungenModel';
+import { JugendberufshilfenModel } from '../../../domain/interfaces/JugendberufshilfenModel';
+import { IconButton } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { FavouriteRequestModel } from '../../../domain/interfaces/FavouriteModel';
 
 interface MarkerData {
   x: number; // longitude
@@ -19,9 +26,16 @@ interface MarkerData {
 interface MapComponentProps {
   markers: MarkerData[];
   homeMarker?: MarkerData | null;
+  setFavFacility: React.Dispatch<
+    React.SetStateAction<FavouriteRequestModel | null>
+  >;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ markers, homeMarker }) => {
+const MapComponent: React.FC<MapComponentProps> = ({
+  markers,
+  homeMarker,
+  setFavFacility,
+}) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<object | null>(null);
   const [distanceToHome, setDistanceToHome] = useState<number | null>(null);
@@ -173,6 +187,127 @@ const MapComponent: React.FC<MapComponentProps> = ({ markers, homeMarker }) => {
       alert('Failed to fetch additional information');
     }
   };
+  const parseJugendberufshilfenModel = (
+    details: any
+  ): JugendberufshilfenModel => {
+    return {
+      bezeichnung: details.bezeichnung,
+      ort: details.ort,
+      plz: details.plz,
+      strasse: details.strasse,
+      telefon: details.telefon,
+      email: details.email,
+      isFavourite: details.isFavourite,
+      fax: details.fax,
+      id: details.id,
+      kurzbezeichnung: details.kurzbezeichnung,
+      leistungen: details.leistungen,
+      objectid: details.objectid,
+      traeger: details.traeger,
+      x: details.x,
+      y: details.y,
+      // Add other properties as needed
+    };
+  };
+  const parseKindertageseinrichtungenModel = (
+    details: any
+  ): KindertageseinrichtungenModel => {
+    return {
+      barrierefrei: details.barrierefrei,
+      bezeichnung: details.bezeichnung,
+      hausbez: details.hausbez,
+      hort: details.hort,
+      integrativ: details.integrativ,
+      kita: details.kitea,
+      strschl: details.strschl,
+      url: details.url,
+      ort: details.ort,
+      plz: details.plz,
+      strasse: details.strasse,
+      telefon: details.telefon,
+      email: details.email,
+      isFavourite: details.isFavourite,
+      fax: details.fax,
+      id: details.id,
+      kurzbezeichnung: details.kurzbezeichnung,
+      objectid: details.objectid,
+      traeger: details.traeger,
+      x: details.x,
+      y: details.y,
+      // Add other properties as needed
+    };
+  };
+
+  const parseSchulenModel = (details: any): SchulenModel => {
+    return {
+      bezeichnung: details.bezeichnung,
+      art: details.art,
+      bezeichnungzusatz: details.bezeichnungzusatz,
+      bezugnr: details.bezugnr,
+      creationdate: details.creationdate,
+      snummer: details.snummer,
+      sprachen: details.sprachen,
+      profile: details.profile,
+      standorttyp: details.standorttyp,
+      typ: details.typ,
+      traegertyp: details.traegertyp,
+      creator: details.creator,
+      editdate: details.editdate,
+      editor: details.editor,
+      gebietsartnummer: details.gebietsartnummer,
+      globalid: details.globalid,
+      nummer: details.nummer,
+      ort: details.ort,
+      plz: details.plz,
+      strasse: details.strasse,
+      telefon: details.telefon,
+      email: details.email,
+      isFavourite: details.isFavourite,
+      fax: details.fax,
+      id: details.id,
+      kurzbezeichnung: details.kurzbezeichnung,
+      objectid: details.objectid,
+      traeger: details.traeger,
+      www: details.www,
+      x: details.x,
+      y: details.y,
+      // Add other properties as needed
+    };
+  };
+
+  const parseSchulsozialarbeitModel = (
+    details: any
+  ): SchulsozialarbeitModel => {
+    return {
+      bezeichnung: details.bezeichnung,
+      ort: details.ort,
+      leistungen: details.leistungen,
+      plz: details.plz,
+      strasse: details.strasse,
+      telefon: details.telefon,
+      email: details.email,
+      isFavourite: details.isFavourite,
+      fax: details.fax,
+      id: details.id,
+      kurzbezeichnung: details.kurzbezeichnung,
+      objectid: details.objectid,
+      traeger: details.traeger,
+      x: details.x,
+      y: details.y,
+      // Add other properties as needed
+    };
+  };
+
+  const handleFavIconClick = (marker: any) => {
+    const jsonUserInfo = localStorage.getItem('userInfo');
+    if (jsonUserInfo) {
+      const userInfo = JSON.parse(jsonUserInfo);
+      if (userInfo && userInfo.userId) {
+        marker.userId = userInfo.userId;
+        setFavFacility(marker);
+      }
+    }
+  };
 
   return (
     <MapContainer
@@ -215,7 +350,102 @@ const MapComponent: React.FC<MapComponentProps> = ({ markers, homeMarker }) => {
               >
                 <Popup>
                   <div>
-                    <h1 className="text-lg font-bold">{marker.category}</h1>
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-lg font-bold">{marker.category}</h1>
+                      <IconButton
+                        className="text-blue-500"
+                        onClick={() =>
+                          handleFavIconClick({
+                            userId: 0,
+                            categoryName: marker.category,
+                            categoryId: (() => {
+                              switch (marker.category) {
+                                case 'Jugendberufshilfen':
+                                  return parseJugendberufshilfenModel(
+                                    marker.details
+                                  ).id;
+                                case 'Kindertageseinrichtungen':
+                                  return parseKindertageseinrichtungenModel(
+                                    marker.details
+                                  ).id;
+                                case 'Schulen':
+                                  return parseSchulenModel(marker.details).id;
+                                case 'Schulsozialarbeit':
+                                  return parseSchulsozialarbeitModel(
+                                    marker.details
+                                  ).id;
+                                default:
+                                  return null;
+                              }
+                            })(),
+                            isFavourite: (() => {
+                              switch (marker.category) {
+                                case 'Jugendberufshilfen':
+                                  return !parseJugendberufshilfenModel(
+                                    marker.details
+                                  ).isFavourite;
+                                case 'Kindertageseinrichtungen':
+                                  return !parseKindertageseinrichtungenModel(
+                                    marker.details
+                                  ).isFavourite;
+                                case 'Schulen':
+                                  return !parseSchulenModel(marker.details)
+                                    .isFavourite;
+                                case 'Schulsozialarbeit':
+                                  return !parseSchulsozialarbeitModel(
+                                    marker.details
+                                  ).isFavourite;
+                                default:
+                                  return false;
+                              }
+                            })(),
+                          })
+                        }
+                      >
+                        {category === 'Jugendberufshilfen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseJugendberufshilfenModel(
+                                marker.details
+                              ).isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Kindertageseinrichtungen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseKindertageseinrichtungenModel(
+                                marker.details
+                              ).isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Schulen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseSchulenModel(marker.details)
+                                .isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Schulsozialarbeit' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseSchulsozialarbeitModel(marker.details)
+                                .isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                      </IconButton>
+                    </div>
                     <hr className="my-2" />
                     <table className="table-auto w-full">
                       <tbody>

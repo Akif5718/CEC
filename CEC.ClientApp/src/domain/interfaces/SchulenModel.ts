@@ -29,4 +29,5 @@ export interface SchulenModel {
   www: string;
   x: string;
   y: string;
+  isFavourite: boolean;
 }

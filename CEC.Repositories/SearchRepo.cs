@@ -23,7 +23,7 @@ namespace CEC.Repositories
             _logger = logger;
         }
 
-        public async Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model)
+        public async Task<ResultModel<FilterResponseModel>> GetAllData(FilterRequestModel model, int userId)
         {
             ResultModel<FilterResponseModel> resultModel = new ResultModel<FilterResponseModel>();
             resultModel.Data = new FilterResponseModel();
@@ -35,6 +35,8 @@ namespace CEC.Repositories
                 param.Add("@IsKindertageseinrichtungen", model.IsKindertageseinrichtungen, DbType.Boolean, ParameterDirection.Input, null);
                 param.Add("@IsSchulen", model.IsSchulen, DbType.Boolean, ParameterDirection.Input, null);
                 param.Add("@IsSchulsozialarbeit", model.IsSchulsozialarbeit, DbType.Boolean, ParameterDirection.Input, null);
+                param.Add("@IsFavourite", model.IsFavourite, DbType.Boolean, ParameterDirection.Input, null);
+                param.Add("@UserId", userId, DbType.Int32, ParameterDirection.Input, null);
                 
                 using (var multi = await Connection.QueryMultipleAsync(SPDBConstants.SEARCH_MAP_DATA, param, commandType: CommandType.StoredProcedure))
                 {

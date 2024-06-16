@@ -34,6 +34,7 @@ import { BuyerApiSlice } from '../../../infrastructure/api/BuyerApiSlice';
 import { AccountApiSlice } from '../../../infrastructure/api/AccountApiSlice';
 import { SearchApiSlice } from '../../../infrastructure/api/SearchApiSlice';
 import { UserApiSlice } from '../../../infrastructure/api/UserApiSlice';
+import { FavouriteApiSlice } from '../../../infrastructure/api/FavouriteApiSlice';
 
 export const store = configureStore({
   reducer: {
@@ -72,6 +73,7 @@ export const store = configureStore({
     [AccountApiSlice.reducerPath]: AccountApiSlice.reducer,
     [SearchApiSlice.reducerPath]: SearchApiSlice.reducer,
     [UserApiSlice.reducerPath]: UserApiSlice.reducer,
+    [FavouriteApiSlice.reducerPath]: FavouriteApiSlice.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
@@ -96,7 +98,8 @@ export const store = configureStore({
       BuyerApiSlice.middleware,
       AccountApiSlice.middleware,
       SearchApiSlice.middleware,
-      UserApiSlice.middleware
+      UserApiSlice.middleware,
+      FavouriteApiSlice.middleware
     ),
 });
 

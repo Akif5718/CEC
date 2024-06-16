@@ -14,6 +14,7 @@ Tables/AspNetTables/AspNetUserClaims.sql
 Tables/CEC/Setting.sql
 Tables/CEC/User.sql
 Tables/CEC/Home.sql
+Tables/CEC/Favourite.sql
 
 # Alter
 
@@ -29,6 +30,7 @@ StoredProcedures/SelectUserByEmail.sql
 StoredProcedures/IsValidUser.sql
 StoredProcedures/SelectRoleByUserId.sql
 StoredProcedures/SearchMapData.sql
+StoredProcedures/SaveFavourite.sql
 
 # Migration
 
