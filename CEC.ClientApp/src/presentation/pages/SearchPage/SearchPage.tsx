@@ -22,7 +22,9 @@ interface IHome {
 
 const SearchPage: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [trigger, setTrigger] = useState(false);
   const [home, setHome] = useState<IHome | null>(null);
+  const [transformedMarker, setTransformedMarker] = useState<MarkerData[]>([]);
   const [favFacility, setFavFacility] = useState<FavouriteRequestModel | null>(
     null
   );
@@ -72,6 +74,8 @@ const SearchPage: React.FC = () => {
   useEffect(() => {
     if (isSaveFavSuccess && saveFavResponse && saveFavResponse.data) {
       toast.success('Favourite facilities are updated successfully');
+      // setSelectedCategories([...selectedCategories]);
+      refetchSearchResults();
     } else if (isSaveFavError) {
       // Handle error state
       toast.error('An error occurred');
@@ -92,6 +96,7 @@ const SearchPage: React.FC = () => {
     }
   }, [favFacility]);
   const {
+    refetch: refetchSearchResults,
     isLoading,
     isError,
     isSuccess,
@@ -108,6 +113,7 @@ const SearchPage: React.FC = () => {
         kindertageseinrichtungen:
           searchResponse.data.kindertageseinrichtungen ?? [],
       });
+      setTransformedMarker(transformDataToMarkers({ ...searchResponse.data }));
     } else if (isError) {
       // Handle error state
       toast.error('An error occurred');
@@ -115,21 +121,19 @@ const SearchPage: React.FC = () => {
   }, [isLoading, isError, isSuccess, searchResponse]);
 
   useEffect(() => {
-    setSearchReq({
-      isSchulsozialarbeit: selectedCategories.includes('Schulsozialarbeit')
-        ? true
-        : false,
-      isSchulen: selectedCategories.includes('Schulen') ? true : false,
-      isKindertageseinrichtungen: selectedCategories.includes(
-        'Kindertageseinrichtungen'
-      )
-        ? true
-        : false,
-      isJugendberufshilfen: selectedCategories.includes('Jugendberufshilfen')
-        ? true
-        : false,
-      isFavourite: selectedCategories.includes('Favourite') ? true : false,
-    });
+    const createSearchReq = () => {
+      return {
+        isSchulsozialarbeit: selectedCategories.includes('Schulsozialarbeit'),
+        isSchulen: selectedCategories.includes('Schulen'),
+        isKindertageseinrichtungen: selectedCategories.includes(
+          'Kindertageseinrichtungen'
+        ),
+        isJugendberufshilfen: selectedCategories.includes('Jugendberufshilfen'),
+        isFavourite: selectedCategories.includes('Favourite'),
+      };
+    };
+
+    setSearchReq({ ...createSearchReq() });
   }, [selectedCategories]);
 
   return (
@@ -146,7 +150,7 @@ const SearchPage: React.FC = () => {
       <div className="flex justify-center">
         <div className=" w-[80vw] h-[70vh] overflow-clip">
           <MapComponent
-            markers={transformDataToMarkers(searchResponseData)}
+            markers={transformedMarker}
             homeMarker={
               home
                 ? { x: home.x, y: home.y, category: 'Home', details: {} }

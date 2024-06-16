@@ -193,6 +193,39 @@ namespace CEC.Repositories
                 return resultModel;
             }
         }
+
+        public async Task<ResultModel<bool>> DeleteUser(int userId)
+        {
+            ResultModel<bool> resultModel = new ResultModel<bool>();
+            _logger.LogInformation("Going to execute Method: DeleteUser, Class: UserRepo");
+            try
+            {
+                var param = new DynamicParameters();
+
+                param.Add("@UserId", userId, DbType.String, ParameterDirection.Input, null);
+
+                var res = await Connection
+                    .ExecuteScalarAsync<int>(SPDBConstants.DELETE_USER_BY_ID, param, commandType: CommandType.StoredProcedure);
+                if (res == 0)
+                {
+                    resultModel.Data = true;
+                    resultModel.Message = "Executed successfully";
+                    resultModel.IsSuccess = true;
+                }
+                
+                _logger.LogInformation("Execution completed Method: DeleteUser, Class: UserRepo");
+                return resultModel;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception occurred in Method: DeleteUser, Class: UserRepo, error :{ex.Message}");
+                resultModel.Data = false;
+                resultModel.Message = "Something went wrong";
+                resultModel.IsSuccess = false;
+                resultModel.ErrorMessages = ex.Message.Split(Environment.NewLine);
+                return resultModel;
+            }
+        }
     }
 }
 

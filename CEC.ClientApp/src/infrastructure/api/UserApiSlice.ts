@@ -68,7 +68,58 @@ export const UserApiSlice = createApi({
         }
       },
     }),
+    getAllUser: builder.query<
+      ResultModel<UserResponseModel[]>,
+      IPaginationModel
+    >({
+      query: (objToSend: IPaginationModel) => ({
+        url: 'get-all',
+        method: 'POST',
+        body: objToSend,
+      }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+        } catch (error: any) {
+          toast.error(error.error.message);
+        }
+      },
+    }),
+    getAllUserCount: builder.query<ResultModel<number>, IPaginationModel>({
+      query: (objToSend: IPaginationModel) => ({
+        url: 'get-all-count',
+        method: 'POST',
+        body: objToSend,
+      }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+        } catch (error: any) {
+          toast.error(error.error.message);
+        }
+      },
+    }),
+    deleteUser: builder.mutation<ResultModel<boolean>, number>({
+      query: (id: number) => ({
+        url: 'delete',
+        method: 'POST',
+        body: id,
+      }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+        } catch (error: any) {
+          toast.error(error.error.message);
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetUserByIdMutation, useSaveUserMutation } = UserApiSlice;
+export const {
+  useGetUserByIdMutation,
+  useSaveUserMutation,
+  useDeleteUserMutation,
+  useGetAllUserQuery,
+  useGetAllUserCountQuery,
+} = UserApiSlice;

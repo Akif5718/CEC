@@ -125,5 +125,20 @@ public class UserController : Controller
         return BadRequest(result);
     }
     
+    [RoleValidation(Roles = new string[]{"Admin,Customer"})]
+    [HttpPost("delete")]
+    public async Task<IActionResult> SaveUser([FromBody] int userId)
+    {
+        _logger.LogInformation("Going to execute _userService.SaveUser()");
+        ResultModel<bool> result = await _userService.DeleteUser(userId);
+        _logger.LogInformation("Execution completed _userService.SaveUser()");
+
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
+    
     
 }

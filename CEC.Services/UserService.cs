@@ -75,6 +75,14 @@ namespace CEC.Services
             _logger.LogInformation("Execution completed Method: GetUserByEmail, Class: UserService");
             return result;
         }
+
+        public async Task<ResultModel<bool>> DeleteUser(int userId)
+        {
+            _logger.LogInformation("Going to execute Method: DeleteUser, Class: UserService");
+            var result = await _repo.DeleteUser(userId);
+            _logger.LogInformation("Execution completed Method: DeleteUser, Class: UserService");
+            return result;
+        }
     }
 }
 

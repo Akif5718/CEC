@@ -10,6 +10,7 @@ public class SPDBConstants
     public const string SELECT_USER_BY_ID = "dbo.SelectUserById";
     public const string SELECT_USER_BY_EMAIL = "dbo.SelectUserByEmail";
     public const string SELECT_ROLE_BY_USER_ID = "dbo.SelectRoleByUserId";
+    public const string DELETE_USER_BY_ID = "dbo.DeleteUserById";
     
     //Search
     public const string SEARCH_MAP_DATA = "dbo.SearchMapData";

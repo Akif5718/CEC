@@ -49,6 +49,7 @@ import SignUp from '../pages/Login/SignUp/SignUp';
 import SignIn from '../pages/Login/SignIn/SignIn';
 import Footer from '../components/Footer';
 import UserProfile from '../pages/UserProfile/UserProfile';
+import UserManagement from '../pages/UserManagement/UserManagement';
 // import SignIn from '../pages/Login/SignIn';
 // const Navbar = lazy(() => import('../components/Navbar'));
 // const ThemeSettings = lazy(() => import('../components/ThemeSettings'));
@@ -197,6 +198,10 @@ const App = () => {
                       /> */}
                       <Route path="searchPage" element={<SearchPage />} />
                       <Route path="userProfile" element={<UserProfile />} />
+                      <Route
+                        path="userManagement"
+                        element={<UserManagement />}
+                      />
                     </Routes>
                   </Suspense>
                 </div>

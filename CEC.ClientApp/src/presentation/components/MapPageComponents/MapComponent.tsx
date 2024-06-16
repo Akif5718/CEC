@@ -103,13 +103,45 @@ const MapComponent: React.FC<MapComponentProps> = ({
       iconAnchor: [16, 48],
     });
 
-  const getCategoryIcon = (category: string) =>
-    L.divIcon({
-      className: 'custom-div-icon',
-      html: `<div style="background-color: ${getColorByCategory(
-        category
-      )}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
-    });
+  const getCategoryIcon = (marker: MarkerData) => {
+    const isFavourite = (() => {
+      switch (marker.category) {
+        case 'Jugendberufshilfen':
+          return parseJugendberufshilfenModel(marker.details).isFavourite;
+        case 'Kindertageseinrichtungen':
+          return parseKindertageseinrichtungenModel(marker.details).isFavourite;
+        case 'Schulen':
+          return parseSchulenModel(marker.details).isFavourite;
+        case 'Schulsozialarbeit':
+          return parseSchulsozialarbeitModel(marker.details).isFavourite;
+        default:
+          return false; // Return false instead of null
+      }
+    })();
+    if (isFavourite) {
+      return L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="position: relative; width: 40px; height: 40px;">
+            <svg viewBox="0 0 24 24" style="width: 100%; height: 100%;">
+              <path fill="${getColorByCategory(
+                marker.category
+              )}" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+        `,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+      });
+    } else {
+      return L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: ${getColorByCategory(
+          marker.category
+        )}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
+      });
+    }
+  };
 
   const createClusterCustomIcon = (cluster: any, color: string) => {
     const count = cluster.getChildCount();
@@ -346,7 +378,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
               <Marker
                 key={index}
                 position={[marker.y, marker.x]}
-                icon={getCategoryIcon(marker.category)}
+                icon={getCategoryIcon(marker)}
               >
                 <Popup>
                   <div>

@@ -1,8 +1,4 @@
-/* eslint-disable no-param-reassign */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-// Import the JSON file directly
-import { toast } from 'react-toastify';
 import { API_BASE_URL } from '../../../public/apiConfig.json';
 import { getToken } from '../Auth/JWTSecurity/jwtTokenManager';
 import { ResultModel } from '../../domain/interfaces/ResultModel';
@@ -13,7 +9,6 @@ import {
 
 const controllerName: string = `Search`;
 
-// Define a service using a base URL and expected endpoints
 export const SearchApiSlice = createApi({
   reducerPath: 'SearchApi',
   baseQuery: fetchBaseQuery({
@@ -29,12 +24,12 @@ export const SearchApiSlice = createApi({
         headers.set('Authorization', `Bearer ${token}`);
       }
       if (userId) {
-        headers.set('UserId', userId.toString()); // Setting user ID in headers
+        headers.set('UserId', userId.toString());
       }
       return headers;
     },
   }),
-  tagTypes: ['searchResult'],
+  tagTypes: ['SearchResults'], // Define a tag type for caching
   endpoints: (builder) => ({
     getAll: builder.query<ResultModel<SearchResponseModel>, SearchRequestModel>(
       {
@@ -43,13 +38,6 @@ export const SearchApiSlice = createApi({
           method: 'POST',
           body: objToSend,
         }),
-        async onQueryStarted(arg, { queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-          } catch (error) {
-            console.error('Error saving data to localStorage', error);
-          }
-        },
       }
     ),
   }),

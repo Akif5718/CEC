@@ -13,6 +13,7 @@ namespace CEC.Services.Interface
         Task<ResultModel<int>> GetAllUserCount(UserListModel model);
         Task<ResultModel<bool>> IsUserNameUnique(string? userName);
         Task<ResultModel<UserModel>> GetUserByEmail(string identityUserEmail);
+        Task<ResultModel<bool>> DeleteUser(int userId);
     }
  }
 
