@@ -12,6 +12,7 @@ import {
 import { ResultModel } from '../../domain/interfaces/ResultModel';
 import { SignUpRequestModel } from '../../domain/interfaces/SignUpModel';
 import { UserResponseModel } from '../../domain/interfaces/UserResponseModel';
+import { ChangeUserPasswordModel } from '../../domain/interfaces/ChangeUserPasswordModel';
 
 const controllerName: string = `Account`;
 
@@ -73,7 +74,34 @@ export const AccountApiSlice = createApi({
         }
       },
     }),
+    changePassword: builder.mutation<
+      ResultModel<boolean>,
+      ChangeUserPasswordModel
+    >({
+      query: (objToSend: ChangeUserPasswordModel) => ({
+        url: 'change-password',
+        method: 'POST',
+        body: objToSend,
+      }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          // Save the response to localStorage
+          if (!data.data) {
+            toast.error(data.message);
+          } else {
+            toast.success(data.message);
+          }
+        } catch (error: any) {
+          localStorage.setItem('Error ', JSON.stringify(error.error));
+        }
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useSignupMutation } = AccountApiSlice;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useChangePasswordMutation,
+} = AccountApiSlice;

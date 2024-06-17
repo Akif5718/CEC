@@ -48,7 +48,10 @@ BEGIN
 				  ,[U].[Email]
 				  ,[U].[PhoneNumber]
 				  ,[U].[Active]
+				  ,[H].[X]
+				  ,[H].[Y]
 				FROM [dbo].[User] AS [U]
+				INNER JOIN [dbo].[Home] AS [H] ON [H].UserId = [U].Id
 				WHERE [U].[UserTypeId]!=1
 				';
 
