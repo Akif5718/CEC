@@ -20,9 +20,7 @@ import {
   MoveDirection,
   OutMode,
 } from '@tsparticles/engine';
-// import { loadAll } from "@tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
-// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
-import { loadSlim } from '@tsparticles/slim'; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
+import { loadSlim } from '@tsparticles/slim';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -44,9 +42,23 @@ import {
 } from '../../../../application/Redux/store/store';
 import { SignUpRequestModel } from '../../../../domain/interfaces/SignUpModel';
 import { useSignupMutation } from '../../../../infrastructure/api/AccountApiSlice';
-// import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
+
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Configure the marker icon for Leaflet
+const markerIcon = new L.Icon({
+  iconUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 type Props = {};
+const initialMapCoordinates = [50.8282, 12.9209];
 
 const SignUp = (props: Props) => {
   const { register, getValues, reset, control, setValue } = useForm();
@@ -63,11 +75,9 @@ const SignUp = (props: Props) => {
   ] = useSignupMutation();
   useEffect(() => {
     if (isSignUpSuccess) {
-      // setLoaderSpinnerForThisPage(false);
       toast.success(signUpResponse.message);
       navigate(`/`);
     } else if (isSignUpError) {
-      // setLoaderSpinnerForThisPage(false);
       const signUpError = localStorage.getItem('signUpError');
       if (signUpError) {
         const errorData = JSON.parse(signUpError);
@@ -96,6 +106,12 @@ const SignUp = (props: Props) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [userHomeLatitude, setUserHomeLatitude] = useState(
+    initialMapCoordinates[0]
+  );
+  const [userHomeLongitude, setUserHomeLongitude] = useState(
+    initialMapCoordinates[1]
+  );
 
   // this should be run only once per application lifetime
   const [init, setInit] = useState(false);
@@ -110,7 +126,6 @@ const SignUp = (props: Props) => {
   const particlesLoaded = async (container?: Container): Promise<void> => {
     console.log(container);
   };
-
   const options: ISourceOptions = useMemo(
     () => ({
       autoPlay: true,
@@ -665,54 +680,13 @@ const SignUp = (props: Props) => {
       email: getValues().email,
       password: getValues().password,
       confirmPassword: getValues().retypedPassword,
-      x: getValues().userHomeLatitude ? getValues().userHomeLatitude : null,
-      y: getValues().userHomeLongitude ? getValues().userHomeLongitude : null,
+      x: userHomeLongitude,
+      y: userHomeLatitude,
       phoneNumber: '',
       userTypeId: 2,
     };
 
     signUp(sendingObj);
-    // console.log('sendingObj');
-    // console.log(sendingObj);
-
-    // setLoading(true);
-    // axios
-    //   .get(`${API_BASE_URL}/login/signUp`, {
-    //     params: sendingObj,
-    //   })
-    //   .then((res) => {
-    //     console.log('insert er axios!!');
-    //     if (res.data) {
-    //       console.log(
-    //         'Password deyar por button chaap dile j axios call hoy oitar console'
-    //       );
-    //       console.log(res.data);
-
-    //       if (res.data.securityUserId) {
-    //         const dataToSaveInCache = res.data;
-    //         console.log('userInfo');
-    //         console.log(dataToSaveInCache);
-    //         dataToSaveInCache.encryptedPassword = dataToSaveInCache.password;
-    //         dataToSaveInCache.password = getValues().password;
-    //         localStorage.setItem('userInfo', JSON.stringify(dataToSaveInCache));
-
-    //         dispatch(setNavbarShow(true));
-    //         if (lastSavedRoute) {
-    //           navigate(`${lastSavedRoute}`);
-    //         } else {
-    //           navigate(`/home`);
-    //         }
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     // Handle error
-    //     toast.error(`something wrong in backend: ${error}`);
-    //     console.error(`something wrong in backend: ${error}`);
-    //   })
-    //   .finally(() => {
-    //     setLoading(false); // Set loading state to false when axios finishes
-    //   });
   };
 
   // password eye button to show/hide pass
@@ -725,6 +699,26 @@ const SignUp = (props: Props) => {
     event.preventDefault();
   };
 
+  // Map click handler
+  const LocationMarker = () => {
+    useMapEvents({
+      click(e) {
+        const { lat, lng } = e.latlng;
+        setUserHomeLatitude(lat);
+        setUserHomeLongitude(lng);
+        setValue('userHomeLatitude', lat);
+        setValue('userHomeLongitude', lng);
+      },
+    });
+
+    return userHomeLatitude === null || userHomeLongitude === null ? null : (
+      <Marker
+        position={[userHomeLatitude, userHomeLongitude]}
+        icon={markerIcon}
+      />
+    );
+  };
+
   return (
     <>
       <Particles
@@ -733,20 +727,12 @@ const SignUp = (props: Props) => {
         options={options}
       />
 
-      <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center">
-        {/* <div className="block w-[30%] z-[0]">Akifs Project</div> */}
-        <div className="block w-[30%] z-[0]">
-          {/* Main Card */}
+      <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center mt-10">
+        <div className="block md:w-2/4 w-3/4 z-[0]">
           <div className=" block rounded-lg shadow-lg bg-transparent backdrop-blur-sm dark:bg-secondary-dark-bg  text-center">
-            {/* Main Card header */}
             <div className="py-3 bg-transparent backdrop-blur-md text-xl dark:text-gray-200 text-start px-6 border-b border-gray-300">
-              {/* -----[Laboratory experimental place starts here]----- */}
               Sign Up
-              {/* ---//--[Laboratory experimental place ENDS here]----- */}
             </div>
-            {/* Main Card header--/-- */}
-
-            {/* Main Card body */}
             <div className=" px-6 text-start h-[70vh] gap-4 mt-2">
               <div className=" mx-1">
                 <div className="mt-4">
@@ -919,6 +905,11 @@ const SignUp = (props: Props) => {
                         {...register('userHomeLatitude')}
                         id="outlined-adornment-username"
                         type="text"
+                        readOnly
+                        value={userHomeLatitude}
+                        onChange={(e) =>
+                          setUserHomeLatitude(Number(e.target.value))
+                        }
                         endAdornment={
                           <InputAdornment position="end">
                             <MdLocationOn />
@@ -944,6 +935,11 @@ const SignUp = (props: Props) => {
                         {...register('userHomeLongitude')}
                         id="outlined-adornment-username"
                         type="text"
+                        readOnly
+                        value={userHomeLongitude}
+                        onChange={(e) =>
+                          setUserHomeLongitude(Number(e.target.value))
+                        }
                         endAdornment={
                           <InputAdornment position="end">
                             <MdLocationOn />
@@ -958,20 +954,25 @@ const SignUp = (props: Props) => {
                       />
                     </FormControl>
                   </div>
-                  <Link
-                    to="/signIn"
-                    style={{ color: 'blue', textDecoration: 'underline' }}
+                  <MapContainer
+                    center={[50.8282, 12.9209]}
+                    zoom={13}
+                    scrollWheelZoom={false}
+                    style={{ height: '400px', width: '100%' }}
                   >
-                    Already have an account? Sign in
-                  </Link>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                    <LocationMarker />
+                  </MapContainer>
                 </div>
+                <Link
+                  to="/signIn"
+                  style={{ color: 'blue', textDecoration: 'underline' }}
+                >
+                  Already have an account? Sign in
+                </Link>
               </div>
             </div>
-
-            {/* Main Card Body--/-- */}
-
-            {/* Main Card footer */}
-            <div className="py-3 px-6 border-t text-start border-gray-300 text-gray-600">
+            <div className="py-3 px-6 border-t text-start border-gray-300 text-gray-600 mt-10">
               <div className="flex gap-x-3">
                 <button
                   type="button"
@@ -981,7 +982,7 @@ const SignUp = (props: Props) => {
                     loading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                   onClick={btnSignUp}
-                  disabled={loading} // Disable the button when loading
+                  disabled={loading}
                 >
                   {loading && <CircularProgress size={12} color="inherit" />}
                   {'  '}
@@ -989,14 +990,10 @@ const SignUp = (props: Props) => {
                 </button>
               </div>
             </div>
-            {/* Main Card footer--/-- */}
           </div>
-          {/* Main Card--/-- */}
         </div>
       </div>
     </>
-
-    // return wrapper div--/--
   );
 };
 

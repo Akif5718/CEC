@@ -568,14 +568,14 @@ const UserProfile: React.FC = () => {
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <TextField
-            label="Latitude"
+            label="Longitude"
             value={user.x}
             InputProps={{ readOnly: true }}
             variant="filled"
             fullWidth
           />
           <TextField
-            label="Longitude"
+            label="Latitude"
             value={user.y}
             InputProps={{ readOnly: true }}
             variant="filled"
