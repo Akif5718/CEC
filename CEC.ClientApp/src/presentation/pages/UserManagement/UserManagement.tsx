@@ -408,61 +408,62 @@ const UserManagement = (props: Props) => {
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>{selectedUser ? 'Edit User' : 'Add User'}</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-              name="userName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="Username"
-                  fullWidth
-                  variant="outlined"
-                />
-              )}
-            />
-            <Controller
-              name="firstName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="First Name"
-                  fullWidth
-                  variant="outlined"
-                />
-              )}
-            />
-            <Controller
-              name="lastName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="Last Name"
-                  fullWidth
-                  variant="outlined"
-                />
-              )}
-            />
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="Email"
-                  fullWidth
-                  variant="outlined"
-                />
-              )}
-            />
-            <Controller
+        <div className="mt-1">
+          <DialogContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                name="userName"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    label="Username"
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+              />
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    label="First Name"
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+              />
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    label="Last Name"
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+              />
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    label="Email"
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+              />
+              {/* <Controller
               name="phoneNumber"
               control={control}
               render={({ field }) => (
@@ -474,17 +475,18 @@ const UserManagement = (props: Props) => {
                   variant="outlined"
                 />
               )}
-            />
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                Cancel
-              </Button>
-              <Button type="submit" color="primary">
-                Save
-              </Button>
-            </DialogActions>
-          </form>
-        </DialogContent>
+            /> */}
+              <DialogActions>
+                <Button onClick={handleCloseDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary">
+                  Save
+                </Button>
+              </DialogActions>
+            </form>
+          </DialogContent>
+        </div>
       </Dialog>
 
       <Dialog open={confirmDialogOpen} onClose={handleConfirmDialogClose}>

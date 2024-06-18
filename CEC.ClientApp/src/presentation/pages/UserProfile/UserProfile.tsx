@@ -346,33 +346,36 @@ const UserProfile: React.FC = () => {
       {/* Change Password Dialog */}
       <Dialog open={openChangePassword} onClose={handleChangePasswordClose}>
         <DialogTitle>{'Change Password'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Old Password"
-            type="password"
-            fullWidth
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="New Password"
-            type="password"
-            fullWidth
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Confirm New Password"
-            type="password"
-            fullWidth
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </DialogContent>
+        <div className=" mt-1">
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="normal"
+              label="Old Password"
+              type="password"
+              fullWidth
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Confirm New Password"
+              type="password"
+              fullWidth
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </DialogContent>
+        </div>
+
         <DialogActions>
           <Button onClick={handleChangePasswordClose} color="primary">
             Cancel
