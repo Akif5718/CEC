@@ -51,7 +51,8 @@ namespace CEC.Services
             {
                 Token = await _accountRepo.GenerateToken(model),
                 UserId = userData.Data.Id,
-                UserName = userData.Data.UserName
+                UserName = userData.Data.UserName,
+                UserType =  userData.Data.UserTypeId == 1 ? "Admin" : "Customer"
             };
             result.IsSuccess = resultLogin.IsSuccess;
             result.Message = resultLogin.Message;

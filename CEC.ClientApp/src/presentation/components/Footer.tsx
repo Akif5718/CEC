@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
             <div className="text-center md:text-right">
               <div className="text-lg font-bold">Contact Us</div>
               <div className="mt-2 text-gray-400">
-                Straße der Nationen 62, 09111 Chemnitz
+                Straße der Nationen 52, 09111 Chemnitz
               </div>
               <div className="text-gray-400">Phone: +491739806246</div>
               <div className="text-gray-400">

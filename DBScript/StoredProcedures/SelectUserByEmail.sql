@@ -1,4 +1,4 @@
-﻿--region PROCEDURE [dbo].[SelectUserByEmail]
+﻿--region PROCEDURE [dbo].[SelectUserByEmail] 'admin@gmail.com'
 IF OBJECT_ID('[dbo].[SelectUserByEmail]') IS NOT NULL 
     BEGIN 
         DROP PROC [dbo].[SelectUserByEmail] 
@@ -16,7 +16,7 @@ AS
 	[FirstName],
 	[LastName],
 	[AspnetUserId],
-	[UserTypeId]
+	[UserTypeId],
 	[Email],
 	[PhoneNumber],
 	[Active]

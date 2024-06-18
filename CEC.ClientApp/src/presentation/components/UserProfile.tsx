@@ -33,38 +33,7 @@ import {
   setAllFeatureIsClicked,
 } from '../../application/Redux/slices/IsClickedSlice.js';
 import { ILocationDto } from '../../domain/interfaces/UserInfoInterface.js';
-
-// import { userProfileData } from '../assets/data/dummy.jsx';
-// export const userProfileData = [
-//   {
-//     icon: <BsCurrencyDollar />,
-//     title: 'My Profile',
-//     desc: 'Account Settings',
-//     iconColor: '#03C9D7',
-//     iconBg: '#E5FAFB',
-//   },
-//   {
-//     icon: <BsShield />,
-//     title: 'My Inbox',
-//     desc: 'Messages & Emails',
-//     iconColor: 'rgb(0, 194, 146)',
-//     iconBg: 'rgb(235, 250, 242)',
-//   },
-//   {
-//     icon: <FiCreditCard />,
-//     title: 'My Tasks',
-//     desc: 'To-do and Daily Tasks',
-//     iconColor: 'rgb(255, 244, 229)',
-//     iconBg: 'rgb(254, 201, 15)',
-//   },
-//   {
-//     icon: <BsShield />,
-//     title: 'Change Location',
-//     desc: `Current Location: ${userSession.locationName}`,
-//     iconColor: 'rgb(0, 194, 146)',
-//     iconBg: 'rgb(235, 250, 242)',
-//   },
-// ];
+import PeopleIcon from '@mui/icons-material/People';
 
 const UserProfile = () => {
   //   const { currentColor } = useStateContext();
@@ -117,30 +86,7 @@ const UserProfile = () => {
   if (jsonUserInfoTemp) {
     userInfo = JSON.parse(jsonUserInfoTemp);
   }
-
   const [userAllInfo, setUserAllInfo] = useState([]);
-  // 1st ei logged in user er company gula anlam, then logged in user j company te already logged in shei companyr location gula analam
-  // useEffect(() => {
-  //   axios
-  //     .get(`${API_BASE_URL}/Login/getUserAllInfo`, {
-  //       params: {
-  //         userName: userInfo?.userName,
-  //         password: userInfo?.encryptedPassword,
-  //       },
-  //       headers: {
-  //         Authorization: `Bearer ${userInfo?.userToken || ''}`,
-  //       },
-  //     })
-  //     .then((response: any) => {
-  //       // Handle success
-  //       setUserAllInfo(response.data);
-  //     })
-  //     .catch((error: any) => {
-  //       // Handle error
-  //       toast.error('Error fetching users all infos:', error);
-  //     });
-  // }, []);
-
   const userProfileData = {
     icon: <SettingsIcon />,
     title: 'My Profile',
@@ -150,6 +96,9 @@ const UserProfile = () => {
     onClickFunc: () => {
       navigate('/userProfile');
     },
+  };
+  const handleUserManagementClick = () => {
+    navigate('/userManagement');
   };
   return (
     <div className="nav-item z-[1000000] absolute right-1 top-16 bg-slate-700 border backdrop-blur-3xl dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -195,32 +144,59 @@ const UserProfile = () => {
         </div>
       </div>
       <div>
-        <div
-          key={uuidv4()}
-          onClick={userProfileData.onClickFunc}
-          className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
-        >
-          <button
-            type="button"
-            style={{
-              color: userProfileData.iconColor,
-              backgroundColor: userProfileData.iconBg,
-            }}
-            className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+        {userSession.userType == 'Admin' ? (
+          <div
+            onClick={handleUserManagementClick}
+            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
           >
-            {userProfileData.icon}
-          </button>
-
-          <div>
-            <p className="font-semibold dark:text-gray-200 ">
-              {userProfileData.title}
-            </p>
-            <p className="text-gray-500 text-sm dark:text-gray-400">
-              {' '}
-              {userProfileData.desc}{' '}
-            </p>
+            <button
+              type="button"
+              style={{
+                color: userProfileData.iconColor,
+                backgroundColor: userProfileData.iconBg,
+              }}
+              className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+            >
+              <PeopleIcon />
+            </button>
+            <div>
+              <p className="font-semibold dark:text-gray-200 ">
+                User Management
+              </p>
+              <p className="text-gray-500 text-sm dark:text-gray-400">
+                {' '}
+                Manage Users
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            key={uuidv4()}
+            onClick={userProfileData.onClickFunc}
+            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
+          >
+            <button
+              type="button"
+              style={{
+                color: userProfileData.iconColor,
+                backgroundColor: userProfileData.iconBg,
+              }}
+              className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+            >
+              {userProfileData.icon}
+            </button>
+
+            <div>
+              <p className="font-semibold dark:text-gray-200 ">
+                {userProfileData.title}
+              </p>
+              <p className="text-gray-500 text-sm dark:text-gray-400">
+                {' '}
+                {userProfileData.desc}{' '}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       <div className="mt-5">
         <button

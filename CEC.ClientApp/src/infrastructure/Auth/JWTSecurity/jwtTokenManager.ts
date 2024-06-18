@@ -55,7 +55,7 @@ export const getToken = async (): Promise<string | null> => {
       return null;
     }
   } else if (!token) {
-    toast.error('No Token Found!');
+    // toast.error('No Token Found!');
   }
 
   return token;
