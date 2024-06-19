@@ -90,7 +90,7 @@ const SignUp = (props: Props) => {
   useEffect(() => {
     if (isSignUpSuccess) {
       // setLoaderSpinnerForThisPage(false);
-      toast.success(signUpResponse.message);
+      toast.success(signUpResponse?.message);
       navigate(`${lastSavedRoute || '/'}`);
     } else if (isSignUpError) {
       // setLoaderSpinnerForThisPage(false);

@@ -15,7 +15,6 @@ import {
   toggleActiveMenu,
   falsifyActiveMenu,
 } from '../../application/Redux/slices/ActiveMenuSlice.js';
-import { useGetSAChainMenuByCompanyLocationUserIdQuery } from '../../infrastructure/api/SAChainMenuApiSlice.js';
 
 const Sidebar = () => {
   // const { activeMenu, setActiveMenu, screenSize, currentColor } =
@@ -48,16 +47,6 @@ const Sidebar = () => {
   //   ScreenWidth: 1707,
   // };
 
-  const {
-    data: SAChainMenuData,
-    isLoading: SAChainMenuLoading,
-    // error: SAChainMenuGetError,
-  } = useGetSAChainMenuByCompanyLocationUserIdQuery({
-    userId: userInfo?.securityUserId || 0,
-    companyId: userInfo?.companyId || 0,
-    locationId: userInfo?.locationId || 0,
-  });
-
   interface ILinks {
     name?: string;
     path?: string;
@@ -68,16 +57,6 @@ const Sidebar = () => {
 
   const tasklinks: ILinks[] = [];
   let taskChainsObject = {};
-  if (!SAChainMenuLoading) {
-    SAChainMenuData?.forEach((item) => {
-      const tempObj = {
-        name: item.fixedTaskTemplateName,
-        path: item.fixedTaskTemplateName.replace(/\s+/g, ''),
-        icon: <FiShoppingBag />,
-      };
-      tasklinks.push(tempObj);
-    });
-  }
 
   const allLinksObj: ILinks = {
     name: 'All',
