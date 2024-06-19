@@ -47,13 +47,6 @@ public class AccountController : Controller
         }
         return BadRequest(result);
     }
-    [Authorize]
-    [RoleValidation(Roles = new string[]{"Admin,Customer"})]
-    [HttpGet]
-    public string Get()
-    {
-        return "You hit me!";
-    }
     
     [HttpPost()]
     [Route("change-password")]

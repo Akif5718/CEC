@@ -127,7 +127,7 @@ public class UserController : Controller
     
     [RoleValidation(Roles = new string[]{"Admin,Customer"})]
     [HttpPost("delete")]
-    public async Task<IActionResult> SaveUser([FromBody] int userId)
+    public async Task<IActionResult> DeleteUser([FromBody] int userId)
     {
         _logger.LogInformation("Going to execute _userService.SaveUser()");
         ResultModel<bool> result = await _userService.DeleteUser(userId);
