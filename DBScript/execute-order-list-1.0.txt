@@ -20,6 +20,7 @@ Tables/CEC/Favourite.sql
 
 # Seed scripts
 SeedData/Setting.sql
+SeedData/User.sql
 
 # StoredProcedures
 StoredProcedures/SaveUser.sql
