@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { Home } from '@mui/icons-material';
+import { useLocation, useParams } from 'react-router-dom';
 import FilterComponent from '../../components/MapPageComponents/FilterComponent';
 import Navigator from '../../components/MapPageComponents/Navigator';
 import { useGetAllQuery } from '../../../infrastructure/api/SearchApiSlice';
-import { toast } from 'react-toastify';
 import {
   SearchRequestModel,
   SearchResponseModel,
@@ -11,9 +13,10 @@ import MapComponent from '../../components/MapPageComponents/MapComponent'; // A
 import { MarkerData } from '../../../domain/interfaces/MarkerData';
 import { useGetUserByIdMutation } from '../../../infrastructure/api/UserApiSlice';
 import { UserResponseModel } from '../../../domain/interfaces/UserResponseModel';
-import { Home } from '@mui/icons-material';
 import { FavouriteRequestModel } from '../../../domain/interfaces/FavouriteModel';
 import { useSaveFavouriteMutation } from '../../../infrastructure/api/FavouriteApiSlice';
+import { useAppDispatch } from '../../../application/Redux/store/store';
+import { saveLastRoute } from '../../../application/Redux/slices/LastRouteSlice';
 
 interface IHome {
   x: number;
@@ -21,6 +24,16 @@ interface IHome {
 }
 
 const SearchPage: React.FC = () => {
+  const { filterKeywords } = useParams();
+  console.log('Rupom see here------->');
+  console.log(filterKeywords);
+  console.log(typeof filterKeywords);
+  const filtrationArray = filterKeywords ? filterKeywords.split('-') : [];
+
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  dispatch(saveLastRoute({ from: location.pathname }));
+
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [trigger, setTrigger] = useState(false);
   const [home, setHome] = useState<IHome | null>(null);
@@ -29,12 +42,35 @@ const SearchPage: React.FC = () => {
     null
   );
   const [searchReq, setSearchReq] = useState<SearchRequestModel>({
-    isJugendberufshilfen: true,
+    isJugendberufshilfen: false,
     isKindertageseinrichtungen: false,
     isSchulen: false,
     isSchulsozialarbeit: false,
     isFavourite: false,
   });
+
+  // rupom made this to get everything selected of the filters
+  useEffect(() => {
+    if (filterKeywords) {
+      filtrationArray.forEach((element) => {
+        if (!selectedCategories.includes(element)) {
+          selectedCategories.push(element);
+          type SearchRequestModelKeys = keyof SearchRequestModel;
+          const key = `is${element}` as SearchRequestModelKeys;
+          setSearchReq((prevState) => ({
+            ...prevState,
+            [key]: true,
+          }));
+        }
+      });
+    }
+  }, [filterKeywords]);
+
+  useEffect(() => {
+    console.log('Location path name current');
+    console.log(location.pathname);
+  }, []);
+
   const [searchResponseData, setSearchResponseData] =
     useState<SearchResponseModel>({
       jugendberufshilfen: [],
@@ -146,7 +182,6 @@ const SearchPage: React.FC = () => {
           />
         </div>
       </div>
-
       <div className="flex justify-center">
         <div className=" w-[80vw] h-[70vh] overflow-clip">
           <MapComponent
@@ -158,6 +193,20 @@ const SearchPage: React.FC = () => {
             }
             setFavFacility={setFavFacility}
           />
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <div className="w-[80vw] text-right">
+          <span>
+            Source:{' '}
+            <a
+              href="https://portal-chemnitz.opendata.arcgis.com/"
+              target="blank"
+              className=" text-blue-500"
+            >
+              Open Data Portal
+            </a>
+          </span>
         </div>
       </div>
     </>

@@ -27,6 +27,7 @@
     "geodesy": "^2.4.0",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
     "lodash": "^4.17.21",
     "material-react-table": "^2.0.5",
     "react": "^18.2.0",

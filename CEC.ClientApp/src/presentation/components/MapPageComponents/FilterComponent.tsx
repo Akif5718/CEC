@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/button-has-type */
+import React, { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -70,11 +73,10 @@ const FilterComponent: React.FC<FilterProps> = ({
   };
 
   const handleSearchBoxChange = (event: any, newValue: any) => {
-    let changeSelections: string[] = [];
-    newValue.forEach((element: { name: string }) => {
-      changeSelections = [...changeSelections, element.name];
-    });
-    setSelectedCategories(changeSelections);
+    const newSelectedCategories = newValue.map(
+      (item: { name: string }) => item.name
+    );
+    setSelectedCategories(newSelectedCategories);
   };
 
   const resetFilters = () => {
@@ -89,33 +91,15 @@ const FilterComponent: React.FC<FilterProps> = ({
     setSelectedCategories(selectedCategories.filter((c) => c !== category));
   };
 
+  // Map selectedCategories to the corresponding category objects
+  const selectedCategoryObjects = categories.filter((category) =>
+    selectedCategories.includes(category.name)
+  );
+
   return (
     <div className="p-4 mt-20 relative">
-      {/* Filter options for larger devices */}
-      {/* <div className="hidden md:flex space-x-4 mb-4">
-        <button
-          onClick={selectAll}
-          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
-        >
-          Select All
-        </button>
-        <button
-          onClick={resetFilters}
-          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
-        >
-          Reset
-        </button>
-        {categories.map((category) => (
-          <CategoryButton
-            key={category.name}
-            category={category}
-            selected={selectedCategories.includes(category.name)}
-            onClick={() => toggleCategory(category.name)}
-          />
-        ))}
-      </div> */}
       <div className="hidden md:block">
-        <h1 className="text-2xl font-bold mb-4">Filter</h1>
+        <h1 className="text-2xl font-bold mb-4 dark:text-gray-300">Filter</h1>
         <div className="md:flex space-x-4 mb-4">
           <Autocomplete
             multiple
@@ -124,6 +108,7 @@ const FilterComponent: React.FC<FilterProps> = ({
             disableCloseOnSelect
             getOptionLabel={(option) => option.name}
             onChange={handleSearchBoxChange}
+            value={selectedCategoryObjects} // Set the value here
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
@@ -185,7 +170,7 @@ const FilterComponent: React.FC<FilterProps> = ({
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L14 12.414V17a1 1 0 01-.293.707l-4 4A1 1 0 019 21v-8.586L3.293 6.707A1 1 0 013 6V4z"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zm0 6a1 1 0 011-1h7a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
           />
         </svg>
       </button>

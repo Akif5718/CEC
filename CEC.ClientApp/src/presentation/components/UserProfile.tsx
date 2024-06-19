@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react-refresh/only-export-components */
@@ -5,12 +7,19 @@ import { useState, useEffect } from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
+import PeopleIcon from '@mui/icons-material/People';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+
 // import Swal from 'sweetalert2';
 
 import {
   Autocomplete,
   Box,
-  // Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
   Modal,
   TextField,
   Tooltip,
@@ -23,7 +32,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { API_BASE_URL } from '../../../public/apiConfig.json';
 import avatar from '../assets/data/avatar.jpg';
-import Button from './Button';
+import Button2 from './Button';
 import {
   useAppDispatch,
   useAppSelector,
@@ -33,7 +42,8 @@ import {
   setAllFeatureIsClicked,
 } from '../../application/Redux/slices/IsClickedSlice.js';
 import { ILocationDto } from '../../domain/interfaces/UserInfoInterface.js';
-import PeopleIcon from '@mui/icons-material/People';
+import { useChangePasswordMutation } from '../../infrastructure/api/AccountApiSlice.js';
+import { ChangeUserPasswordModel } from '../../domain/interfaces/ChangeUserPasswordModel.js';
 
 const UserProfile = () => {
   //   const { currentColor } = useStateContext();
@@ -45,6 +55,7 @@ const UserProfile = () => {
   //   const { setIsClicked, initialState } = useStateContext();
   const tempUserSession = localStorage.getItem('userInfo');
   const userSession = tempUserSession ? JSON.parse(tempUserSession) : '';
+  const lastSavedRoute = useAppSelector((state) => state.lastRoute.from);
   const {
     register,
     getValues,
@@ -62,6 +73,12 @@ const UserProfile = () => {
     // },
     mode: 'onBlur', // Validation will trigger on blur
   });
+  const [oldPassword, setOldPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
+  const [changePassword, { isLoading: isChangingPassword }] =
+    useChangePasswordMutation();
 
   const logoutBtn = () => {
     const initialState: IIsClicked = {
@@ -78,6 +95,7 @@ const UserProfile = () => {
       localStorage.removeItem('userInfo');
       localStorage.removeItem('brFeature');
     }
+    // navigate(`${lastSavedRoute || '/'}`);
     navigate('/');
   };
 
@@ -86,7 +104,12 @@ const UserProfile = () => {
   if (jsonUserInfoTemp) {
     userInfo = JSON.parse(jsonUserInfoTemp);
   }
+
   const [userAllInfo, setUserAllInfo] = useState([]);
+  const handleUserManagementClick = () => {
+    navigate('/userManagement');
+  };
+
   const userProfileData = {
     icon: <SettingsIcon />,
     title: 'My Profile',
@@ -97,14 +120,52 @@ const UserProfile = () => {
       navigate('/userProfile');
     },
   };
-  const handleUserManagementClick = () => {
-    navigate('/userManagement');
+  const handleChangePasswordClickOpen = () => {
+    setOpenChangePassword(true);
+  };
+
+  const handleChangePasswordClose = () => {
+    setOpenChangePassword(false);
+  };
+
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    const jsonUserInfo = localStorage.getItem('userInfo');
+    if (jsonUserInfo) {
+      const userInfo = JSON.parse(jsonUserInfo);
+      if (userInfo && userInfo.userName) {
+        const changePasswordRequest: ChangeUserPasswordModel = {
+          UserName: userInfo.userName,
+          OldPassword: oldPassword,
+          Password: newPassword,
+          ConfirmPassword: confirmPassword,
+        };
+
+        try {
+          const response = await changePassword(changePasswordRequest).unwrap();
+          if (response.data) {
+            // toast.success('Password changed successfully');
+            setOpenChangePassword(false);
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+          } else {
+            toast.error('Failed to change password');
+          }
+        } catch (error) {
+          toast.error('Failed to change password');
+        }
+      }
+    }
   };
   return (
-    <div className="nav-item z-[1000000] absolute right-1 top-16 bg-slate-700 border backdrop-blur-3xl dark:bg-[#42464D] p-8 rounded-lg w-96">
+    <div className="nav-item z-[1000000] absolute right-1 top-16 bg-slate-100 border backdrop-blur-3xl dark:bg-[#42464D] p-8 rounded-lg w-96">
       <div className="flex justify-between items-center">
         <p className="font-semibold text-lg dark:text-gray-200">User Profile</p>
-        <Button
+        <Button2
           icon={<MdOutlineCancel />}
           color="rgb(153, 171, 180)"
           bgHoverColor="light-gray"
@@ -118,33 +179,10 @@ const UserProfile = () => {
           src={avatar}
           alt="user-profile"
         />
-        <div>
-          {/* <p className="font-semibold text-xl dark:text-gray-200">
-            {' '}
-            {userSession?.userName ? userSession.userName : 'Not Found'}{' '}
-            <p className="text-gray-500 text-sm dark:text-gray-400">
-              {' '}
-              Company:{' '}
-              {userSession?.companyName
-                ? userSession.companyName
-                : 'Not Found'}{' '}
-            </p>
-          </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">
-            {' '}
-            Location:{' '}
-            {userSession?.locationName
-              ? userSession.locationName
-              : 'Not Found'}{' '}
-          </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">
-            {' '}
-            {userSession?.emailAddress ? userSession.emailAddress : 'Not Found'}
-          </p> */}
-        </div>
+        <div></div>
       </div>
-      <div>
-        {userSession.userType == 'Admin' ? (
+      {userSession.userType == 'Admin' ? (
+        <>
           <div
             onClick={handleUserManagementClick}
             className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
@@ -169,10 +207,8 @@ const UserProfile = () => {
               </p>
             </div>
           </div>
-        ) : (
           <div
-            key={uuidv4()}
-            onClick={userProfileData.onClickFunc}
+            onClick={handleChangePasswordClickOpen}
             className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
           >
             <button
@@ -183,21 +219,47 @@ const UserProfile = () => {
               }}
               className=" text-xl rounded-lg p-3 hover:bg-light-gray"
             >
-              {userProfileData.icon}
+              <VpnKeyIcon />
             </button>
-
             <div>
               <p className="font-semibold dark:text-gray-200 ">
-                {userProfileData.title}
+                Change Password
               </p>
               <p className="text-gray-500 text-sm dark:text-gray-400">
                 {' '}
-                {userProfileData.desc}{' '}
+                Password
               </p>
             </div>
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <div
+          key={uuidv4()}
+          onClick={userProfileData.onClickFunc}
+          className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
+        >
+          <button
+            type="button"
+            style={{
+              color: userProfileData.iconColor,
+              backgroundColor: userProfileData.iconBg,
+            }}
+            className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+          >
+            {userProfileData.icon}
+          </button>
+
+          <div>
+            <p className="font-semibold dark:text-gray-200 ">
+              {userProfileData.title}
+            </p>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              {' '}
+              {userProfileData.desc}{' '}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="mt-5">
         <button
           type="button"
@@ -246,8 +308,53 @@ const UserProfile = () => {
         </Box>
       </Modal>
       {/* // modals -----end----- out of html normal body/position */}
+      {/* Change Password Dialog */}
+      <Dialog open={openChangePassword} onClose={handleChangePasswordClose}>
+        <DialogTitle>{'Change Password'}</DialogTitle>
+        <div className=" mt-1">
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="normal"
+              label="Old Password"
+              type="password"
+              fullWidth
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Confirm New Password"
+              type="password"
+              fullWidth
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </DialogContent>
+        </div>
+
+        <DialogActions>
+          <Button onClick={handleChangePasswordClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handlePasswordChange}
+            color="secondary"
+            disabled={isChangingPassword}
+          >
+            {isChangingPassword ? 'Changing...' : 'Change Password'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
-
 export default UserProfile;

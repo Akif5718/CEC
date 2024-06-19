@@ -39,8 +39,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<object | null>(null);
   const [distanceToHome, setDistanceToHome] = useState<number | null>(null);
-  const tempUserSession = localStorage.getItem('userInfo');
-  const userSession = tempUserSession ? JSON.parse(tempUserSession) : '';
 
   const getColorByCategory = (category: string): string => {
     switch (category) {
@@ -347,7 +345,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     <MapContainer
       center={[50.8282, 12.9209]}
       zoom={13}
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '100%', width: '100%' }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
@@ -386,102 +384,99 @@ const MapComponent: React.FC<MapComponentProps> = ({
                   <div>
                     <div className="flex items-center justify-between">
                       <h1 className="text-lg font-bold">{marker.category}</h1>
-                      {userSession?.userType == 'customer' && (
-                        <IconButton
-                          className="text-blue-500"
-                          onClick={() =>
-                            handleFavIconClick({
-                              userId: 0,
-                              categoryName: marker.category,
-                              categoryId: (() => {
-                                switch (marker.category) {
-                                  case 'Jugendberufshilfen':
-                                    return parseJugendberufshilfenModel(
-                                      marker.details
-                                    ).id;
-                                  case 'Kindertageseinrichtungen':
-                                    return parseKindertageseinrichtungenModel(
-                                      marker.details
-                                    ).id;
-                                  case 'Schulen':
-                                    return parseSchulenModel(marker.details).id;
-                                  case 'Schulsozialarbeit':
-                                    return parseSchulsozialarbeitModel(
-                                      marker.details
-                                    ).id;
-                                  default:
-                                    return null;
-                                }
-                              })(),
-                              isFavourite: (() => {
-                                switch (marker.category) {
-                                  case 'Jugendberufshilfen':
-                                    return !parseJugendberufshilfenModel(
-                                      marker.details
-                                    ).isFavourite;
-                                  case 'Kindertageseinrichtungen':
-                                    return !parseKindertageseinrichtungenModel(
-                                      marker.details
-                                    ).isFavourite;
-                                  case 'Schulen':
-                                    return !parseSchulenModel(marker.details)
-                                      .isFavourite;
-                                  case 'Schulsozialarbeit':
-                                    return !parseSchulsozialarbeitModel(
-                                      marker.details
-                                    ).isFavourite;
-                                  default:
-                                    return false;
-                                }
-                              })(),
-                            })
-                          }
-                        >
-                          {category === 'Jugendberufshilfen' && (
-                            <FavoriteIcon
-                              style={{
-                                color: parseJugendberufshilfenModel(
-                                  marker.details
-                                ).isFavourite
-                                  ? 'red'
-                                  : 'gray',
-                              }}
-                            />
-                          )}
-                          {category === 'Kindertageseinrichtungen' && (
-                            <FavoriteIcon
-                              style={{
-                                color: parseKindertageseinrichtungenModel(
-                                  marker.details
-                                ).isFavourite
-                                  ? 'red'
-                                  : 'gray',
-                              }}
-                            />
-                          )}
-                          {category === 'Schulen' && (
-                            <FavoriteIcon
-                              style={{
-                                color: parseSchulenModel(marker.details)
-                                  .isFavourite
-                                  ? 'red'
-                                  : 'gray',
-                              }}
-                            />
-                          )}
-                          {category === 'Schulsozialarbeit' && (
-                            <FavoriteIcon
-                              style={{
-                                color: parseSchulsozialarbeitModel(
-                                  marker.details
-                                ).isFavourite
-                                  ? 'red'
-                                  : 'gray',
-                              }}
-                            />
-                          )}
-                        </IconButton>
-                      )}
+                      <IconButton
+                        className="text-blue-500"
+                        onClick={() =>
+                          handleFavIconClick({
+                            userId: 0,
+                            categoryName: marker.category,
+                            categoryId: (() => {
+                              switch (marker.category) {
+                                case 'Jugendberufshilfen':
+                                  return parseJugendberufshilfenModel(
+                                    marker.details
+                                  ).id;
+                                case 'Kindertageseinrichtungen':
+                                  return parseKindertageseinrichtungenModel(
+                                    marker.details
+                                  ).id;
+                                case 'Schulen':
+                                  return parseSchulenModel(marker.details).id;
+                                case 'Schulsozialarbeit':
+                                  return parseSchulsozialarbeitModel(
+                                    marker.details
+                                  ).id;
+                                default:
+                                  return null;
+                              }
+                            })(),
+                            isFavourite: (() => {
+                              switch (marker.category) {
+                                case 'Jugendberufshilfen':
+                                  return !parseJugendberufshilfenModel(
+                                    marker.details
+                                  ).isFavourite;
+                                case 'Kindertageseinrichtungen':
+                                  return !parseKindertageseinrichtungenModel(
+                                    marker.details
+                                  ).isFavourite;
+                                case 'Schulen':
+                                  return !parseSchulenModel(marker.details)
+                                    .isFavourite;
+                                case 'Schulsozialarbeit':
+                                  return !parseSchulsozialarbeitModel(
+                                    marker.details
+                                  ).isFavourite;
+                                default:
+                                  return false;
+                              }
+                            })(),
+                          })
+                        }
+                      >
+                        {category === 'Jugendberufshilfen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseJugendberufshilfenModel(
+                                marker.details
+                              ).isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Kindertageseinrichtungen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseKindertageseinrichtungenModel(
+                                marker.details
+                              ).isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Schulen' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseSchulenModel(marker.details)
+                                .isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                        {category === 'Schulsozialarbeit' && (
+                          <FavoriteIcon
+                            style={{
+                              color: parseSchulsozialarbeitModel(marker.details)
+                                .isFavourite
+                                ? 'red'
+                                : 'gray',
+                            }}
+                          />
+                        )}
+                      </IconButton>
                     </div>
                     <hr className="my-2" />
                     <table className="table-auto w-full">
@@ -510,7 +505,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       {/* Modal for additional information */}
       {modalOpen && (
         <div className="fixed inset-0 z-[9999] bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-md shadow-lg max-w-3xl w-full">
+          <div className="bg-white dark:text-gray-200 dark:bg-[#202329] p-4 rounded-md shadow-lg max-w-3xl w-full">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Additional Information</h2>
               <button

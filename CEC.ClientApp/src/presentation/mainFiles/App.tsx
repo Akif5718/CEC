@@ -98,14 +98,14 @@ const App = () => {
 
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
-      <ThemeProvider
-        theme={createTheme({
-          palette: {
-            mode: currentMode === 'Dark' ? 'dark' : 'light',
-          },
-        })}
-      >
-        <BrowserRouter>
+      <BrowserRouter>
+        <ThemeProvider
+          theme={createTheme({
+            palette: {
+              mode: currentMode === 'Dark' ? 'dark' : 'light',
+            },
+          })}
+        >
           {/* --the most super background DIV on which everything is situated---STARTS- */}
           <div className="flex  relative dark:bg-main-dark-bg">
             {/* --Settings Icon & button-- STARTS--- */}
@@ -178,11 +178,8 @@ const App = () => {
                 >
                   <Suspense fallback={<h1>LOADING............HAHA</h1>}>
                     <Routes>
-                      {/* <Route
-                        path="/"
-                        element={<PrivateRoute element={<Home />} />}
-                      /> */}
                       <Route path="/" element={<Home />} />
+                      {/* <Route path="/" element={<Home />} /> */}
                       <Route path="signIn" element={<SignIn />} />
                       <Route path="signUp" element={<SignUp />} />
 
@@ -196,7 +193,11 @@ const App = () => {
                         path="searchPage/:id"
                         element={<PrivateRoute element={<SearchPage />} />}
                       /> */}
-                      <Route path="searchPage" element={<SearchPage />} />
+
+                      <Route
+                        path="searchPage/:filterKeywords"
+                        element={<SearchPage />}
+                      />
                       <Route path="userProfile" element={<UserProfile />} />
                       <Route
                         path="userManagement"
@@ -210,24 +211,24 @@ const App = () => {
             {/* --All Routes declaration and main background starts--ENDS----  */}
           </div>
           {/* --the most super background DIV on which everything is situated---ENDS- */}
-        </BrowserRouter>
 
-        <ToastContainer
-          theme="colored"
-          position="bottom-right"
-          autoClose={3000}
-          pauseOnHover
-          draggable
-          closeOnClick
-          hideProgressBar={false}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          style={{ zIndex: 999999999999 }}
-        />
-      </ThemeProvider>
-      <div>
-        <Footer></Footer>
-      </div>
+          <ToastContainer
+            theme="colored"
+            position="bottom-right"
+            autoClose={3000}
+            pauseOnHover
+            draggable
+            closeOnClick
+            hideProgressBar={false}
+            newestOnTop={false}
+            pauseOnFocusLoss
+            style={{ zIndex: 999999999999 }}
+          />
+        </ThemeProvider>
+        <div>
+          <Footer />
+        </div>
+      </BrowserRouter>
     </div>
   );
 };

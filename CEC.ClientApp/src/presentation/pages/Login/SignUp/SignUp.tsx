@@ -20,7 +20,9 @@ import {
   MoveDirection,
   OutMode,
 } from '@tsparticles/engine';
-import { loadSlim } from '@tsparticles/slim';
+// import { loadAll } from "@tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
+// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
+import { loadSlim } from '@tsparticles/slim'; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -42,7 +44,6 @@ import {
 } from '../../../../application/Redux/store/store';
 import { SignUpRequestModel } from '../../../../domain/interfaces/SignUpModel';
 import { useSignupMutation } from '../../../../infrastructure/api/AccountApiSlice';
-
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -56,13 +57,26 @@ const markerIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
+const initialMapCoordinates = [50.8282, 12.9209];
+
+// import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
 
 type Props = {};
-const initialMapCoordinates = [50.8282, 12.9209];
 
 const SignUp = (props: Props) => {
   const { register, getValues, reset, control, setValue } = useForm();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  dispatch(setNavbarShow(true));
+  const lastSavedRoute = useAppSelector((state) => state.lastRoute.from);
+  const [userHomeLatitude, setUserHomeLatitude] = useState(
+    initialMapCoordinates[0]
+  );
+  const [userHomeLongitude, setUserHomeLongitude] = useState(
+    initialMapCoordinates[1]
+  );
+
   const [
     signUp,
     {
@@ -75,9 +89,11 @@ const SignUp = (props: Props) => {
   ] = useSignupMutation();
   useEffect(() => {
     if (isSignUpSuccess) {
+      // setLoaderSpinnerForThisPage(false);
       toast.success(signUpResponse.message);
-      navigate(`/`);
+      navigate(`${lastSavedRoute || '/'}`);
     } else if (isSignUpError) {
+      // setLoaderSpinnerForThisPage(false);
       const signUpError = localStorage.getItem('signUpError');
       if (signUpError) {
         const errorData = JSON.parse(signUpError);
@@ -99,19 +115,8 @@ const SignUp = (props: Props) => {
     signUpResponse,
   ]);
 
-  const navigate = useNavigate();
-
-  const dispatch = useAppDispatch();
-  dispatch(setNavbarShow(true));
-
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const [userHomeLatitude, setUserHomeLatitude] = useState(
-    initialMapCoordinates[0]
-  );
-  const [userHomeLongitude, setUserHomeLongitude] = useState(
-    initialMapCoordinates[1]
-  );
 
   // this should be run only once per application lifetime
   const [init, setInit] = useState(false);
@@ -126,6 +131,7 @@ const SignUp = (props: Props) => {
   const particlesLoaded = async (container?: Container): Promise<void> => {
     console.log(container);
   };
+
   const options: ISourceOptions = useMemo(
     () => ({
       autoPlay: true,
@@ -640,9 +646,6 @@ const SignUp = (props: Props) => {
     []
   );
 
-  const lastSavedRoute = useAppSelector(
-    (state) => state.lastRoute.from.pathname
-  );
   const btnSignUp = () => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!getValues().firstName) {
@@ -680,8 +683,8 @@ const SignUp = (props: Props) => {
       email: getValues().email,
       password: getValues().password,
       confirmPassword: getValues().retypedPassword,
-      x: userHomeLongitude,
-      y: userHomeLatitude,
+      x: getValues().userHomeLongitude ? getValues().userHomeLongitude : null,
+      y: getValues().userHomeLatitude ? getValues().userHomeLatitude : null,
       phoneNumber: '',
       userTypeId: 2,
     };
@@ -699,7 +702,6 @@ const SignUp = (props: Props) => {
     event.preventDefault();
   };
 
-  // Map click handler
   const LocationMarker = () => {
     useMapEvents({
       click(e) {
@@ -728,11 +730,19 @@ const SignUp = (props: Props) => {
       />
 
       <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center mt-10">
-        <div className="block md:w-2/4 w-3/4 z-[0]">
+        {/* <div className="block w-[30%] z-[0]">Akifs Project</div> */}
+        <div className="block w-[30%] z-[0]">
+          {/* Main Card */}
           <div className=" block rounded-lg shadow-lg bg-transparent backdrop-blur-sm dark:bg-secondary-dark-bg  text-center">
+            {/* Main Card header */}
             <div className="py-3 bg-transparent backdrop-blur-md text-xl dark:text-gray-200 text-start px-6 border-b border-gray-300">
+              {/* -----[Laboratory experimental place starts here]----- */}
               Sign Up
+              {/* ---//--[Laboratory experimental place ENDS here]----- */}
             </div>
+            {/* Main Card header--/-- */}
+
+            {/* Main Card body */}
             <div className=" px-6 text-start h-[70vh] gap-4 mt-2">
               <div className=" mx-1">
                 <div className="mt-4">
@@ -972,6 +982,10 @@ const SignUp = (props: Props) => {
                 </Link>
               </div>
             </div>
+
+            {/* Main Card Body--/-- */}
+
+            {/* Main Card footer */}
             <div className="py-3 px-6 border-t text-start border-gray-300 text-gray-600 mt-10">
               <div className="flex gap-x-3">
                 <button
@@ -982,7 +996,7 @@ const SignUp = (props: Props) => {
                     loading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                   onClick={btnSignUp}
-                  disabled={loading}
+                  disabled={loading} // Disable the button when loading
                 >
                   {loading && <CircularProgress size={12} color="inherit" />}
                   {'  '}
@@ -990,10 +1004,14 @@ const SignUp = (props: Props) => {
                 </button>
               </div>
             </div>
+            {/* Main Card footer--/-- */}
           </div>
+          {/* Main Card--/-- */}
         </div>
       </div>
     </>
+
+    // return wrapper div--/--
   );
 };
 

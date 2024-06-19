@@ -11,7 +11,7 @@ const PrivateRoute: React.FC<{
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  console.log('Location');
+  console.log('last Location');
   console.log(location);
 
   // Save the current location in state if user is not authenticated
@@ -20,6 +20,7 @@ const PrivateRoute: React.FC<{
   }
 
   return isAuthenticated ? <>{element}</> : <Navigate to="/signIn" replace />;
+  // return <>{element}</>;
 };
 
 export default PrivateRoute;

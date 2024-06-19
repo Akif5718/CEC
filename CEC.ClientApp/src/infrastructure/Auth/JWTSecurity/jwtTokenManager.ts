@@ -45,6 +45,7 @@ export const getToken = async (): Promise<string | null> => {
 
   if (token && isTokenExpired(token)) {
     toast.error('Token expired');
+    localStorage.removeItem('userInfo');
     try {
       // token = await refreshToken();
     } catch (error) {

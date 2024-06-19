@@ -26,6 +26,7 @@ import {
 import { Add, Edit, Search, Delete, Restore } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 import {
   useGetAllUserQuery,
   useSaveUserMutation,
@@ -36,6 +37,8 @@ import {
   UserSaveRequestModel,
   UserResponseModel,
 } from '../../../domain/interfaces/UserResponseModel';
+import { saveLastRoute } from '../../../application/Redux/slices/LastRouteSlice';
+import { useAppDispatch } from '../../../application/Redux/store/store';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,7 +46,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -61,7 +64,7 @@ function TabPanel(props: TabPanelProps) {
       )}
     </div>
   );
-}
+};
 
 type Props = {};
 
@@ -78,6 +81,10 @@ const UserManagement = (props: Props) => {
   const [pageSize, setPageSize] = useState(10);
   const [activePage, setActivePage] = useState(0);
   const [inactivePage, setInactivePage] = useState(0);
+
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  dispatch(saveLastRoute({ from: location.pathname }));
 
   const activeQuery = useGetAllUserQuery({
     searchModel: {
@@ -463,19 +470,19 @@ const UserManagement = (props: Props) => {
                   />
                 )}
               />
-              {/* <Controller
-              name="phoneNumber"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="Phone Number"
-                  fullWidth
-                  variant="outlined"
-                />
-              )}
-            /> */}
+              <Controller
+                name="phoneNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="dense"
+                    label="Phone Number"
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
+              />
               <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">
                   Cancel

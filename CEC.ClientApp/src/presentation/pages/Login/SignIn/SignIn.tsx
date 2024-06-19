@@ -44,6 +44,8 @@ type Props = {};
 const SignIn = (props: Props) => {
   const { register, getValues, reset, control, setValue } = useForm();
   const navigate = useNavigate();
+  const lastSavedRoute = useAppSelector((state) => state.lastRoute.from);
+
   const [
     logIn,
     {
@@ -58,17 +60,19 @@ const SignIn = (props: Props) => {
   useEffect(() => {
     if (isLoginSuccess) {
       // setLoaderSpinnerForThisPage(false);
-      toast.success("Logged In Successfully")
-      navigate(`/`)
+      toast.success('Logged In Successfully');
+      navigate(`${lastSavedRoute || '/'}`);
     } else if (isLoginError) {
       // setLoaderSpinnerForThisPage(false);
       const loginError = localStorage.getItem('loginError');
-      if(loginError){
+      if (loginError) {
         const errorData = JSON.parse(loginError);
         if (errorData.data.message) {
-          toast.error(`Status: ${errorData.status} - ${errorData.data.message}`);
+          toast.error(
+            `Status: ${errorData.status} - ${errorData.data.message}`
+          );
         } else {
-          toast.error("Something went wrong");
+          toast.error('Something went wrong');
         }
         localStorage.removeItem('loginError');
       }
@@ -78,7 +82,7 @@ const SignIn = (props: Props) => {
     isLoginError,
     errorMessage,
     isLoginSuccess,
-    loginResponse
+    loginResponse,
   ]);
 
   // const [loading, setLoading] = useState(false);
@@ -618,9 +622,6 @@ const SignIn = (props: Props) => {
     []
   );
 
-  const lastSavedRoute = useAppSelector(
-    (state) => state.lastRoute.from.pathname
-  );
   const btnSignIn = () => {
     if (!getValues().userName) {
       toast.info('You have to enter your user name');
@@ -631,7 +632,7 @@ const SignIn = (props: Props) => {
       return;
     }
 
-    const sendingObj : ILoginRequest = {
+    const sendingObj: ILoginRequest = {
       userName: getValues().userName,
       password: getValues().password,
     };
@@ -751,7 +752,9 @@ const SignIn = (props: Props) => {
                   onClick={btnSignIn}
                   disabled={isLoginLoading} // Disable the button when loading
                 >
-                  {isLoginLoading && <CircularProgress size={12} color="inherit" />}
+                  {isLoginLoading && (
+                    <CircularProgress size={12} color="inherit" />
+                  )}
                   {'  '}
                   {isLoginLoading ? 'Please wait...' : 'Sign In'}
                 </button>

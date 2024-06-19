@@ -54,8 +54,17 @@ namespace CEC.Services
                 UserName = userData.Data.UserName,
                 UserType =  userData.Data.UserTypeId == 1 ? "Admin" : "Customer"
             };
-            result.IsSuccess = resultLogin.IsSuccess;
-            result.Message = resultLogin.Message;
+            if (!userData.Data.Active)
+            {
+                result.IsSuccess = false;
+                result.Message = "User is not found";
+                result.Data = null;
+            }
+            else
+            {
+                result.IsSuccess = resultLogin.IsSuccess;
+                result.Message = resultLogin.Message;
+            }
             _logger.LogInformation("Execution completed Method: LoginUser, Class: AccountService");
             return result;
         }

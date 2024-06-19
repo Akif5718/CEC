@@ -1,9 +1,12 @@
+/* eslint-disable react/button-has-type */
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/data/brand-logo.png';
-// import { useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const tempUserSession = localStorage.getItem('userInfo');
+  const userSession = tempUserSession ? JSON.parse(tempUserSession) : '';
 
   return (
     <footer className="bg-black text-white py-8">
@@ -28,19 +31,22 @@ const Footer: React.FC = () => {
             <nav className="text-left">
               <div className="text-lg font-bold">Navigation</div>
               <button
-                // onClick={() => navigate('/')}
+                onClick={() => navigate('/')}
                 className="block text-gray-300 hover:text-white mt-2"
               >
                 Home
               </button>
+              {userSession.userType == 'Admin' && (
+                <button
+                  onClick={() => navigate('/userManagement')}
+                  className="block text-gray-300 hover:text-white mt-2"
+                >
+                  User Management
+                </button>
+              )}
+
               <button
-                // onClick={() => navigate('/user-management')}
-                className="block text-gray-300 hover:text-white mt-2"
-              >
-                User Management
-              </button>
-              <button
-                // onClick={() => navigate('/search-in-map')}
+                onClick={() => navigate('/searchPage/Schulen')}
                 className="block text-gray-300 hover:text-white mt-2"
               >
                 Search In Map

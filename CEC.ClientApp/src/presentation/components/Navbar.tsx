@@ -144,6 +144,7 @@ const Navbar = () => {
         {/* Logo container */}
         <h3 className="ml-4 text-white cursor-pointer">Care Edu Compass</h3>
       </div>
+
       <div className="flex justify-end items-center">
         {userInfo?.userId ? (
           <Tooltip title="Profile" placement="bottom" arrow>

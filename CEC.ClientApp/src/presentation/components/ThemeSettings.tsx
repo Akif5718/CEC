@@ -53,7 +53,7 @@ const ThemeSettings = () => {
 
   return (
     // <div className="bg-half-transparent w-screen fixed nav-item top-0 right-0"> /it was bg-half-transparent, rupom changed it
-    <div className="bg-transparent backdrop-blur-sm w-screen fixed nav-item top-0 right-0">
+    <div className="bg-transparent z-[9999999999999999] backdrop-blur-sm w-screen fixed nav-item top-0 right-0">
       <div className=" float-right h-screen dark:text-gray-200 bg-white dark:bg-[#484B52] w-400">
         <div className="flex justify-between items-center p-4 ml-4">
           <p className="font-semibold text-xl">Settings</p>
@@ -132,7 +132,7 @@ const ThemeSettings = () => {
           </div>
         </div>
 
-        <div className="flex-col border-t-1 border-color p-4 ml-4">
+        {/* <div className="flex-col border-t-1 border-color p-4 ml-4">
           <p className="font-semibold text-lg">Theme Colors</p>
           <div className="flex gap-3">
             {themeColors.map((item: any) => (
@@ -162,7 +162,7 @@ const ThemeSettings = () => {
               </Tooltip>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
