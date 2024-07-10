@@ -667,7 +667,7 @@ const SignIn = (props: Props) => {
             {/* Main Card header--/-- */}
 
             {/* Main Card body */}
-            <div className=" px-6 text-start h-[70vh] gap-4 mt-2">
+            <div className=" px-6 text-start h-[40vh] gap-4 mt-2">
               <div className=" mx-1">
                 <div className="mt-4">
                   <FormControl
@@ -729,7 +729,8 @@ const SignIn = (props: Props) => {
                   </FormControl>
                   <Link
                     to="/signUp"
-                    style={{ color: 'blue', textDecoration: 'underline' }}
+                    className=" text-blue-600 dark:text-blue-400 text-decoration-line: underline"
+                    // style={{ color: 'blue', textDecoration: 'underline' }}
                   >
                     New here? Sign up
                   </Link>

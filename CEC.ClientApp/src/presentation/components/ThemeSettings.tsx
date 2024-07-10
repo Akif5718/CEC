@@ -52,7 +52,7 @@ const ThemeSettings = () => {
   const dispatch = useAppDispatch();
 
   return (
-    // <div className="bg-half-transparent w-screen fixed nav-item top-0 right-0"> /it was bg-half-transparent, rupom changed it
+    // <div className="bg-half-transparent w-screen fixed nav-item top-0 right-0"> /it was bg-half-transparent,  changed it
     <div className="bg-transparent z-[9999999999999999] backdrop-blur-sm w-screen fixed nav-item top-0 right-0">
       <div className=" float-right h-screen dark:text-gray-200 bg-white dark:bg-[#484B52] w-400">
         <div className="flex justify-between items-center p-4 ml-4">

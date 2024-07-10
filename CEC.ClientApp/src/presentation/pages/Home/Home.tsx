@@ -179,7 +179,7 @@ const Home: React.FC<Props> = () => {
             />
             <CategoryCard
               icon={
-                <Diversity3Icon
+                <ChildCareIcon
                   style={{ fontSize: '5rem' }}
                   className="text-white"
                 />
@@ -190,7 +190,7 @@ const Home: React.FC<Props> = () => {
             />
             <CategoryCard
               icon={
-                <ChildCareIcon
+                <Diversity3Icon
                   style={{ fontSize: '5rem' }}
                   className="text-white"
                 />

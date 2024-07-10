@@ -172,8 +172,8 @@ const AttachmentLoader = (props: any) => {
       }
       const newFiles = await Promise.all(newFilesPromises);
       setAttachments([...newFiles, ...attachments]);
-      // alert('Hello rupom');
-      console.log('Hello rupom');
+      // alert('Hello ');
+      console.log('Hello ');
       console.log(attachments);
       // Clear the file input value
       if (fileInputRef?.current) {

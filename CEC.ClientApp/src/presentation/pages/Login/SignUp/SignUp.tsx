@@ -729,7 +729,7 @@ const SignUp = (props: Props) => {
         options={options}
       />
 
-      <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center mt-10">
+      <div className=" bg-slate-700 w-full h-[100vh] flex justify-center items-center mt-16">
         {/* <div className="block w-[30%] z-[0]">Akifs Project</div> */}
         <div className="block w-[30%] z-[0]">
           {/* Main Card */}
@@ -968,7 +968,7 @@ const SignUp = (props: Props) => {
                     center={[50.8282, 12.9209]}
                     zoom={13}
                     scrollWheelZoom={false}
-                    style={{ height: '400px', width: '100%' }}
+                    style={{ height: '320px', width: '100%' }}
                   >
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     <LocationMarker />
@@ -976,7 +976,7 @@ const SignUp = (props: Props) => {
                 </div>
                 <Link
                   to="/signIn"
-                  style={{ color: 'blue', textDecoration: 'underline' }}
+                  className=" text-blue-600 dark:text-blue-400 text-decoration-line: underline"
                 >
                   Already have an account? Sign in
                 </Link>
@@ -986,7 +986,7 @@ const SignUp = (props: Props) => {
             {/* Main Card Body--/-- */}
 
             {/* Main Card footer */}
-            <div className="py-3 px-6 border-t text-start border-gray-300 text-gray-600 mt-10">
+            <div className="py-3 px-6 border-t text-start border-gray-300 text-gray-600 mt-20">
               <div className="flex gap-x-3">
                 <button
                   type="button"

@@ -15,13 +15,13 @@
     "jsx": "react-jsx",
     /* Linting */
     "strict": true,
-    //"strict": false, //rupom uporerta temporary comment and attribute ta k false korse for publishing
+    //"strict": false, // uporerta temporary comment and attribute ta k false korse for publishing
     //"noUnusedLocals": true,
-    "noUnusedLocals": false, //rupom uporerta temporary comment and attribute ta k false korse for publishing
-    //"noUnusedParameters": true,  //rupom uporerta temporary comment and attribute ta k false korse for publishing
+    "noUnusedLocals": false, // uporerta temporary comment and attribute ta k false korse for publishing
+    //"noUnusedParameters": true,  // uporerta temporary comment and attribute ta k false korse for publishing
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
-    // "noFallthroughCasesInSwitch": false //rupom uporerta temporary comment and attribute ta k false korse for publishing
+    // "noFallthroughCasesInSwitch": false // uporerta temporary comment and attribute ta k false korse for publishing
   },
   "include": [
     "src",

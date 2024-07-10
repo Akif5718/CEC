@@ -25,7 +25,7 @@ interface IHome {
 
 const SearchPage: React.FC = () => {
   const { filterKeywords } = useParams();
-  console.log('Rupom see here------->');
+  console.log(' see here------->');
   console.log(filterKeywords);
   console.log(typeof filterKeywords);
   const filtrationArray = filterKeywords ? filterKeywords.split('-') : [];
@@ -49,7 +49,7 @@ const SearchPage: React.FC = () => {
     isFavourite: false,
   });
 
-  // rupom made this to get everything selected of the filters
+  //  made this to get everything selected of the filters
   useEffect(() => {
     if (filterKeywords) {
       filtrationArray.forEach((element) => {
