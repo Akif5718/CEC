@@ -1,4 +1,4 @@
-# BinaryHire Project Setup Guide
+# CareEduCompass Project Setup Guide
 
 ## Frontend (React Version 18.2)
 
